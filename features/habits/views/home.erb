@@ -10,6 +10,13 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
     >
+    <style>
+    header hgroup p a svg {
+      width: var(--font-size);
+      height: var(--font-size);
+      color: var(--contrast);
+    }
+    </style>
     <script type="module">
       import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo@7.3.0';
     </script>
@@ -19,7 +26,10 @@
     <header class="container">
       <hgroup>
         <h1>Porotutu</h1>
-        <p>A place to build your habits. Good habits.</p>
+        <p>
+          A place to build your habits. Good habits.
+          <a href="#" id="theme_switcher"></a>
+        </p>
         <%= habits_erb :new_link %>
       </hgroup>
     </header>
@@ -33,5 +43,7 @@
         </turbo-frame>
       </section>
     </main>
+    <%= habits_erb :github %>
+    <script src="./javascript/minimal-theme-switcher.js"></script>
   </body>
 </html>
