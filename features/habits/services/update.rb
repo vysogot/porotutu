@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Services
     class Update < Patterns::Service
       def call(params:)
-        Therapy
+        Habit
           .where(id: params[:id])
           .update(name: params[:name])
           .first

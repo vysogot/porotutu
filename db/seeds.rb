@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-%w[CBT Existential Psychodynamic]
+['Work out', 'No junk food', 'Be nice']
   .map { |name| { name: } }
-  .then { |hashes| Therapies::Therapy.create(hashes) }
+  .then { |hashes| Habits::Habit.create(hashes) }

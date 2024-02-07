@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Handlers
     class Create < Patterns::Service
       def call(params:)
-        therapy = Services::Create.call(params:)
+        params.slice!(:name)
+        habits = Services::Create.call(params:)
 
         {
-          id: therapy.id,
-          name: therapy.name
+          id: habits.id,
+          name: habits.name
         }
       end
     end

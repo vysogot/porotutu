@@ -1,0 +1,7 @@
+<turbo-frame id="habits_<%= id %>">
+  <h2>Edit habit</h2>
+  <form action="/<%= id %>" method="put">
+    <input type="text" value="<%= name %>" name="name"/>
+    <input type="submit" value="Update"/>
+  </form>
+</turbo-frame>

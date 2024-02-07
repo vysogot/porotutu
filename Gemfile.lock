@@ -25,6 +25,8 @@ GEM
     connection_pool (2.4.1)
     drb (2.2.0)
       ruby2_keywords
+    erb-formatter (0.7.1)
+      syntax_tree (~> 6.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     json (2.7.1)
@@ -39,6 +41,7 @@ GEM
     parser (3.3.0.5)
       ast (~> 2.4.1)
       racc
+    prettier_print (1.2.1)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -90,6 +93,8 @@ GEM
       activerecord (>= 4.1)
       sinatra (>= 1.0)
     sqlite3 (1.7.2-arm64-darwin)
+    syntax_tree (6.2.0)
+      prettier_print (>= 1.2.0)
     tilt (2.3.0)
     timeout (0.4.1)
     tzinfo (2.0.6)
@@ -102,6 +107,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (~> 7.1)
+  erb-formatter (~> 0.7.1)
   pry (~> 0.14.2)
   puma (~> 6.4)
   rack-console (~> 1.4)

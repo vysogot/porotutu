@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Handlers
     class Home < Patterns::Service
       def call
         {
-          therapies: Therapy.all
+          habits: Habit.all
         }
       end
     end

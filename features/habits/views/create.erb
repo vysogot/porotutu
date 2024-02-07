@@ -1,0 +1,13 @@
+<turbo-stream action="append" target="habits">
+  <template>
+    <%= habits_erb :show, locals: { id:, name: } %>
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="new_habits_frame">
+  <template>
+    <div>
+      <p>Added to the list! You want more?</p>
+      <%= habits_erb :new_link %>
+    </div>
+  </template>
+</turbo-stream>

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Services
-    class Create < Patterns::Service
+    class Delete < Patterns::Service
       def call(params:)
-        Therapy.create(params)
+        Habit.destroy(params[:id])
       end
     end
   end

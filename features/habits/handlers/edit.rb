@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Handlers
     class Edit < Patterns::Service
       def call(params:)
-        therapy = Therapy.find(params[:id])
+        habits = Habit.find(params[:id])
 
         {
-          id: therapy.id,
-          name: therapy.name
+          id: habits.id,
+          name: habits.name
         }
       end
     end

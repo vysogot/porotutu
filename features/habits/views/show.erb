@@ -1,0 +1,11 @@
+<turbo-frame id="habits_<%= id %>">
+  <div class="grid">
+    <h2><%= name %></h2>
+    <p>
+      <a role="button" href="/<%= id %>/edit">Edit</a>
+      <form method="delete" action="/<%= id %>">
+        <button class="contrast outline" type="submit">Delete</button>
+      </form>
+    </p>
+  </div>
+</turbo-frame>

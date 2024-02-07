@@ -17,3 +17,5 @@ gem 'sinatra-activerecord', '~> 2.0'
 gem 'sqlite3', '~> 1.7'
 
 gem 'rack-console', '~> 1.4'
+
+gem 'erb-formatter', '~> 0.7.1'

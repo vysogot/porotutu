@@ -1,0 +1,14 @@
+<turbo-frame id="new_habits_frame">
+  <form action="/habits" method="post">
+    <div class="grid">
+      <input type="text" name="name" placeholder="Give it an awesome name" aria-label="Name" required/>
+      <button type="submit">Create</button>
+    </div>
+    <fieldset>
+      <label for="promise">
+        <input type="checkbox" role="switch" id="promise" name="promise"/>
+        I will do it. Many times.
+      </label>
+    </fieldset>
+  </form>
+</turbo-frame>

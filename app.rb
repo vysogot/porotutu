@@ -5,6 +5,7 @@ require 'require_all'
 require 'sinatra/activerecord'
 
 set :database, { adapter: 'sqlite3', database: 'sqlite3:porotutu.sqlite3' }
+set :public_folder, "#{File.dirname(__FILE__)}/public"
 
 require_rel 'patterns'
 require_rel 'features'
@@ -12,39 +13,41 @@ require_rel 'features'
 class App < Sinatra::Base
   register Sinatra::ActiveRecordExtension
 
-  get '/' do
-    locals = Therapies::Handlers::Home.call
+  include Habits::Helpers::Paths
 
-    erb :home, views: 'features/therapies/views', locals:
+  get '/' do
+    locals = Habits::Handlers::Home.call
+
+    habits_erb :home, locals:
   end
 
   get '/new' do
-    erb :new, views: 'features/therapies/views'
+    habits_erb :new
   end
 
-  post '/therapies' do
-    locals = Therapies::Handlers::Create.call(params:)
+  post '/habits' do
+    locals = Habits::Handlers::Create.call(params:)
 
     content_type 'text/vnd.turbo-stream.html'
-    erb :create, views: 'features/therapies/views', locals:
+    habits_erb :create, locals:
   end
 
   get '/:id/edit' do
-    locals = Therapies::Handlers::Edit.call(params:)
+    locals = Habits::Handlers::Edit.call(params:)
 
-    erb :edit, views: 'features/therapies/views', locals:
+    habits_erb :edit, locals:
   end
 
   put '/:id' do
-    locals = Therapies::Handlers::Update.call(params:)
+    locals = Habits::Handlers::Update.call(params:)
 
-    erb :show, views: 'features/therapies/views', locals:
+    habits_erb :show, locals:
   end
 
   delete '/:id' do
-    locals = Therapies::Handlers::Delete.call(params:)
+    locals = Habits::Handlers::Delete.call(params:)
 
     content_type 'text/vnd.turbo-stream.html'
-    erb :delete, views: 'features/therapies/views', locals:
+    habits_erb :delete, locals:
   end
 end

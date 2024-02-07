@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Handlers
     class Delete < Patterns::Service
       def call(params:)

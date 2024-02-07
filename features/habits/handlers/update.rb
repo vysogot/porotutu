@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module Therapies
+module Habits
   module Handlers
     class Update < Patterns::Service
       def call(params:)
-        therapy = Services::Update.call(params:)
+        habits = Services::Update.call(params:)
 
         {
-          id: therapy.id,
-          name: therapy.name
+          id: habits.id,
+          name: habits.name
         }
       end
     end
