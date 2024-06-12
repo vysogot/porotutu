@@ -1,9 +1,10 @@
 <turbo-frame id="habits_<%= id %>">
-  <div class="grid">
-    <h2><%= name %></h2>
+  <div data-controller="habit" class="grid">
+    <h2 data-habit-target="source"><%= name %></h2>
     <p>
       <a role="button" href="/<%= id %>/edit">Edit</a>
       <form method="delete" action="/<%= id %>">
+        <button data-action="habit#copy" class="contrast outline">Copy to clipboard</button>
         <button class="contrast outline" type="submit">Delete</button>
       </form>
     </p>
