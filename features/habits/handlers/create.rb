@@ -2,7 +2,9 @@
 
 module Habits
   module Handlers
-    class Create < Patterns::Service
+    class Create
+      extend Patterns::Service
+
       def call(params:)
         params.slice!(:name)
         habits = Services::Create.call(params:)

@@ -2,7 +2,9 @@
 
 module Habits
   module Handlers
-    class Update < Patterns::Service
+    class Update
+      extend Patterns::Service
+
       def call(params:)
         habits = Services::Update.call(params:)
 

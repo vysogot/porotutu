@@ -2,7 +2,9 @@
 
 module Habits
   module Services
-    class Update < Patterns::Service
+    class Update
+      extend Patterns::Service
+
       def call(params:)
         Habit
           .where(id: params[:id])

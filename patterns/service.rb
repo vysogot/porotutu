@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Patterns
-  class Service
-    def self.call(...)
+  module Service
+    def call(...)
       new.call(...)
     end
   end

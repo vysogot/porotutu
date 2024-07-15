@@ -2,7 +2,9 @@
 
 module Habits
   module Handlers
-    class Edit < Patterns::Service
+    class Edit
+      extend Patterns::Service
+
       def call(params:)
         habits = Habit.find(params[:id])
 

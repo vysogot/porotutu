@@ -2,7 +2,9 @@
 
 module Habits
   module Services
-    class Create < Patterns::Service
+    class Create
+      extend Patterns::Service
+
       def call(params:)
         Habit.create(params)
       end

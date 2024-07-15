@@ -2,7 +2,9 @@
 
 module Habits
   module Handlers
-    class Home < Patterns::Service
+    class Home
+      extend Patterns::Service
+
       def call
         {
           habits: Habit.all

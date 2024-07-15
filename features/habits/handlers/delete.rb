@@ -2,7 +2,9 @@
 
 module Habits
   module Handlers
-    class Delete < Patterns::Service
+    class Delete
+      extend Patterns::Service
+
       def call(params:)
         Services::Delete.call(params:)
 
