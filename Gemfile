@@ -6,6 +6,7 @@ ruby '3.3.0'
 
 gem 'activerecord'
 gem 'erb-formatter'
+gem 'faye-websocket'
 gem 'pry'
 gem 'puma'
 gem 'rack-console'
