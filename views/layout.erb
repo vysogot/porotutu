@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="A place to build your conflicts. Good conflicts."/>
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico">
+    <title><%= @title || 'Porotutu' %></title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
+    >
+    <script type="module">
+      import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo@7.3.0';
+    </script>
+  </head>
+  <body>
+    <%= yield %>
+    <script type="module" src="/javascript/application.js"></script>
+    <script src="/javascript/minimal-theme-switcher.js"></script>
+  </body>
+</html>

@@ -18,7 +18,7 @@ module Conflicts
       locals = Handlers::Create.call(params:)
 
       content_type 'text/vnd.turbo-stream.html'
-      conflicts_erb :create, locals:
+      conflicts_erb :create, layout: false, locals:
     end
 
     get '/:id/edit' do
@@ -37,7 +37,7 @@ module Conflicts
       locals = Handlers::Delete.call(params:)
 
       content_type 'text/vnd.turbo-stream.html'
-      conflicts_erb :delete, locals:
+      conflicts_erb :delete, layout: false, locals:
     end
   end
 end

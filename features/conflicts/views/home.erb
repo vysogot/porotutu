@@ -1,50 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="A place build your conflicts. Good conflicts."/>
-    <link rel="icon" type="image/png" sizes="48x48" href="./favicon.ico">
-    <title>Welcome to Porotutu</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
-    >
-    <style>
-    header hgroup p a svg {
-      width: var(--font-size);
-      height: var(--font-size);
-      color: var(--contrast);
-    }
-    </style>
-    <script type="module">
-      import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo@7.3.0';
-    </script>
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="container">
-      <hgroup>
-        <h1>Porotutu</h1>
-        <p>
-          A place to build your conflicts. Good conflicts.
-          <a href="#" id="theme_switcher"></a>
-        </p>
-        <%= conflicts_erb :new_link %>
-      </hgroup>
-    </header>
-    <!-- Main -->
-    <main class="container">
-      <section id="section-conflicts">
-        <turbo-frame id="conflicts">
-          <% conflicts.each do |conflicts| %>
-            <%= conflicts_erb :show, locals: { id: conflicts.id, name: conflicts.name } %>
-          <% end %>
-        </turbo-frame>
-      </section>
-    </main>
-    <%= conflicts_erb :github %>
-    <script type="module" src="./javascript/application.js"></script>
-    <script src="./javascript/minimal-theme-switcher.js"></script>
-  </body>
-</html>
+<style>
+  header hgroup p a svg {
+    width: var(--font-size);
+    height: var(--font-size);
+    color: var(--contrast);
+  }
+</style>
+
+<header class="container">
+  <hgroup>
+    <h1>Porotutu</h1>
+    <p>
+      A place to build your conflicts. Good conflicts.
+      <a href="#" id="theme_switcher"></a>
+    </p>
+    <%= conflicts_erb :new_link %>
+  </hgroup>
+</header>
+
+<main class="container">
+  <section id="section-conflicts">
+    <turbo-frame id="conflicts">
+      <% conflicts.each do |conflict| %>
+        <%= conflicts_erb :show, locals: { id: conflict.id, name: conflict.name } %>
+      <% end %>
+    </turbo-frame>
+  </section>
+</main>
+
+<%= conflicts_erb :github %>

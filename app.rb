@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'require_all'
+require 'bcrypt'
 require 'pg'
 
 require_rel 'patterns'
@@ -17,5 +18,7 @@ class App < Sinatra::Base
 
   set :public_folder, File.join(__dir__, 'public')
 
+  use Auth::Routes
+  use Users::Routes
   use Conflicts::Routes
 end
