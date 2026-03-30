@@ -41,3 +41,4 @@ Porotutu is a Sinatra + Turbo + PostgreSQL conflict tracker. The codebase follow
 See [`.claude/rules/`](.claude/rules/) for detailed rules.
 
 - **SQL** — [`.claude/rules/sql.md`](.claude/rules/sql.md): `exec_params` SQL string and params array always on separate lines
+- **Sinatra** — [`.claude/rules/sinatra.md`](.claude/rules/sinatra.md): use `register Sinatra::Reloader` inside `configure :development` in the class, not at top level
