@@ -15,6 +15,16 @@
     </script>
   </head>
   <body>
+    <nav class="container">
+      <ul></ul>
+      <ul>
+        <li>
+          <form action="/logout" method="post" data-turbo="false">
+            <button type="submit" class="outline">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
     <%= yield %>
     <script type="module" src="/javascript/application.js"></script>
     <script src="/javascript/minimal-theme-switcher.js"></script>
