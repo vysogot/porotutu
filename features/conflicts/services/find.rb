@@ -10,6 +10,7 @@ module Conflicts
           'SELECT * FROM get_conflict($1)',
           [params[:id]]
         )
+
         row = result.first
         Conflict.new(id: row['id'], name: row['name'])
       end
