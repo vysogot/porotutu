@@ -66,12 +66,12 @@ namespace :db do
   desc 'Load/reload all database functions'
   task :functions do
     conn = PG.connect(DATABASE_URL)
-    files = Dir["#{DB_DIR}/functions/**/*.sql"].sort
+    files = Dir["#{File.expand_path('features', __dir__)}/**/functions/**/*.sql"].sort
 
     puts "\n--- Loading functions ---\n\n"
 
     files.each do |filepath|
-      filename = filepath.delete_prefix("#{DB_DIR}/functions/")
+      filename = filepath.delete_prefix("#{__dir__}/")
       sql = File.read(filepath)
 
       conn.exec(sql)
