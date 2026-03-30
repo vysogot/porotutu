@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS conflicts (
+  id          SERIAL PRIMARY KEY,
+  name        VARCHAR(255),
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at  TIMESTAMP DEFAULT NULL
+);

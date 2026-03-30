@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require 'rack/unreloader'
-require 'pry'
+require 'dotenv/load'
+require_relative 'app'
 
-Unreloader = Rack::Unreloader.new { App }
-Unreloader.require './app.rb'
-
-run Unreloader
+run App
