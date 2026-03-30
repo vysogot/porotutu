@@ -6,10 +6,7 @@ module Conflicts
       extend Patterns::Service
 
       def call
-        result = DB.connection.exec('SELECT id, name FROM conflicts ORDER BY id')
-        {
-          conflicts: result.map { |row| Conflict.new(id: row['id'], name: row['name']) }
-        }
+        { conflicts: Services::List.call }
       end
     end
   end
