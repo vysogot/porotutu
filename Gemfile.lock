@@ -42,7 +42,6 @@ GEM
     rainbow (3.1.1)
     rake (13.2.1)
     regexp_parser (2.9.2)
-    require_all (3.0.0)
     rexml (3.3.1)
       strscan
     rubocop (1.65.0)
@@ -79,6 +78,7 @@ GEM
     tilt (2.7.0)
     unicode-display_width (2.5.0)
     webrick (1.8.1)
+    zeitwerk (2.7.5)
 
 PLATFORMS
   arm64-darwin-24
@@ -92,10 +92,10 @@ DEPENDENCIES
   puma
   rackup
   rake
-  require_all
   rubocop
   sinatra
   sinatra-contrib
+  zeitwerk
 
 RUBY VERSION
    ruby 4.0.1p0

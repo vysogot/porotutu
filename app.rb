@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
+require 'zeitwerk'
 require 'sinatra'
 require 'sinatra/reloader'
-require 'require_all'
 require 'bcrypt'
 require 'pg'
 
-require_rel 'patterns'
-require_rel 'features'
+require_relative 'patterns/database'
+
+loader = Zeitwerk::Loader.new
+loader.push_dir(__dir__)
+loader.collapse("#{__dir__}/features")
+loader.collapse(Dir.glob("#{__dir__}/features/*/models"))
+loader.ignore(
+  "#{__dir__}/app.rb",
+  "#{__dir__}/patterns/database.rb"
+)
+loader.setup
 
 class App < Sinatra::Base
   configure :development do

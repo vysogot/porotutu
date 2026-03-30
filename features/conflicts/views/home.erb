@@ -13,7 +13,7 @@
       A place to build your conflicts. Good conflicts.
       <a href="#" id="theme_switcher"></a>
     </p>
-    <%= conflicts_erb :new_link %>
+    <%= conflicts_erb :new_link, layout: false %>
   </hgroup>
 </header>
 
@@ -21,10 +21,10 @@
   <section id="section-conflicts">
     <turbo-frame id="conflicts">
       <% conflicts.each do |conflict| %>
-        <%= conflicts_erb :show, locals: { id: conflict.id, name: conflict.name } %>
+        <%= conflicts_erb :show, layout: false, locals: { id: conflict.id, name: conflict.name } %>
       <% end %>
     </turbo-frame>
   </section>
 </main>
 
-<%= conflicts_erb :github %>
+<%= conflicts_erb :github, layout: false %>

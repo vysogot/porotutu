@@ -32,7 +32,8 @@ Porotutu is a Sinatra + Turbo + PostgreSQL conflict tracker. The codebase follow
 - **services/** — One class per operation. Extend `Patterns::Service`. Call a SQL function via `DB.connection`. Return a model struct.
 - **functions/** — SQL functions (`CREATE OR REPLACE`). One file per function. Loaded via `rake db:functions`.
 - **models/** — Plain `Data.define` structs; no ORM. E.g. `Feature::Thing = Data.define(:id, :name)`.
-- **views/** — ERB templates. A `feature_erb()` helper resolves paths within the feature namespace.
+- **views/** — ERB templates. A named `feature_erb()` helper (e.g. `conflicts_erb`) in `helpers/paths.rb` resolves paths within the feature namespace. Shared layout lives in `layouts/main.erb`.
+- **errors/** — Custom `StandardError` subclasses raised by services, rescued in routes.
 
 ### Adding a new feature
 
@@ -63,7 +64,8 @@ features/<name>/
   views/edit.erb
   views/show.erb
   views/delete.erb
-  helpers/paths.rb      # feature_erb() helper
+  helpers/paths.rb      # include Patterns::Views; wraps feature_erb() with named helper
+  errors/               # custom StandardError subclasses, raised by services
 ```
 
 Then in `app.rb`, add `use Feature::Routes`.

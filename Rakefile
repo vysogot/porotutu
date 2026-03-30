@@ -93,7 +93,7 @@ namespace :db do
 
   desc 'Reset database (development/testing only): drop schema, recreate, migrate, seed'
   task :reset do
-    env = ENV.fetch('APP_ENV', 'development')
+    env = ENV.fetch('APP_ENV')
 
     unless %w[development testing].include?(env)
       puts "\nCan't run in '#{env}', do it manually or use 'rake db:migrate'\n\n"
