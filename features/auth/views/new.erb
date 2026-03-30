@@ -4,7 +4,7 @@
     <% if error %>
       <p><%= error %></p>
     <% end %>
-    <form action="/session" method="post">
+    <form action="/session" method="post" data-turbo="false">
       <label>
         Email
         <input type="email" name="email" required/>

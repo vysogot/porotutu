@@ -7,13 +7,8 @@ module Auth
 
       def call(params:)
         params = params.slice(:email, :password)
-        user = Services::Login.call(params:)
 
-        if user
-          { user: }
-        else
-          { user: nil, error: 'Invalid email or password.' }
-        end
+        { user: Services::Login.call(params:) }
       end
     end
   end

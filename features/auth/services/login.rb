@@ -12,10 +12,20 @@ module Auth
         )
 
         row = result.first
-        return nil unless row
-        return nil unless BCrypt::Password.new(row['password_digest']) == params[:password]
+
+        validate!(row, params[:password])
 
         Users::User.new(id: row['id'], email: row['email'])
+      end
+
+      private
+
+      def validate!(row, password)
+        raise Errors::InvalidCredentials unless row
+
+        digest = BCrypt::Password.new(row['password_digest'])
+
+        raise Errors::InvalidCredentials unless digest == password
       end
     end
   end

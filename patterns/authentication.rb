@@ -23,7 +23,7 @@ module Patterns
 
     def authenticated?(env)
       session = env['rack.session']
-      return true if session && session[:user_id]
+      return true if session && session['user_id']
 
       method = env['REQUEST_METHOD']
       path   = env['PATH_INFO']

@@ -11,12 +11,10 @@ module Auth
     post '/session' do
       locals = Handlers::Login.call(params:)
 
-      if locals[:user]
-        session[:user_id] = locals[:user].id
-        redirect '/'
-      else
-        auth_erb :new, locals: { error: locals[:error] }
-      end
+      session['user_id'] = locals[:user].id
+      redirect '/', 303
+    rescue Errors::InvalidCredentials => e
+      auth_erb :new, locals: { error: e.message }
     end
 
     post '/logout' do

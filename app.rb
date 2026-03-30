@@ -18,6 +18,12 @@ class App < Sinatra::Base
 
   set :public_folder, File.join(__dir__, 'public')
 
+  enable :sessions
+  set :session_secret, ENV.fetch('SESSION_SECRET')
+  set :sessions, key: 'porotutu.session', httponly: true, same_site: :lax
+
+  use Patterns::Authentication
+
   use Auth::Routes
   use Users::Routes
   use Conflicts::Routes
