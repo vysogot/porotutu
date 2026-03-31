@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION reveal_conflicts(p_couple_id UUID, p_partner_id UUID)
+BEGIN;
+
+DROP FUNCTION IF EXISTS reveal_conflicts(UUID, UUID);
+
+CREATE FUNCTION reveal_conflicts(p_couple_id UUID, p_partner_id UUID)
 RETURNS TABLE(
   id UUID, couple_id UUID, creator_id UUID,
   title TEXT, description TEXT, favor TEXT,
@@ -24,3 +28,5 @@ BEGIN
       conflicts.created_at, conflicts.updated_at, conflicts.archived_at;
 END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;

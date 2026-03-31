@@ -107,3 +107,4 @@ See [`.claude/rules/`](.claude/rules/) for detailed rules.
 - **SQL** — [`.claude/rules/sql.md`](.claude/rules/sql.md): always put SQL string on its own line; all queries go through named SQL functions
 - **Sinatra** — [`.claude/rules/sinatra.md`](.claude/rules/sinatra.md): use `register Sinatra::Reloader` inside `configure :development` in the class, not at top level
 - **Turbo** — [`.claude/rules/turbo.md`](.claude/rules/turbo.md): auth forms need `data-turbo="false"`; redirects after form submission use `303`
+- **Models** — [`.claude/rules/models.md`](.claude/rules/models.md): define `from_row` on the model for DB row casting; never inline `Model.new(...)` with raw row access in services

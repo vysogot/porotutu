@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION get_conflicts(p_couple_id UUID, p_user_id UUID)
+BEGIN;
+
+DROP FUNCTION IF EXISTS get_conflicts(UUID, UUID);
+
+CREATE FUNCTION get_conflicts(p_couple_id UUID, p_user_id UUID)
 RETURNS TABLE(
   id UUID, couple_id UUID, creator_id UUID,
   title TEXT, description TEXT, favor TEXT,
@@ -20,3 +24,5 @@ BEGIN
     ORDER BY c.created_at DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;

@@ -38,3 +38,48 @@ result.map { |row| Conflict.new(id: row['id'], name: row['name']) }
 ## Functions
 
 All queries must go through a named SQL function. Never write raw `SELECT/INSERT/UPDATE/DELETE` directly in a service. Functions live in `features/<name>/functions/` and are loaded via `rake db:functions`.
+
+## Function file structure
+
+Every SQL function file must wrap its contents in a transaction, drop the existing function first, then create it fresh. Use `CREATE` not `CREATE OR REPLACE` — the DROP makes OR REPLACE redundant, and OR REPLACE silently ignores return type changes instead of failing loudly.
+
+```sql
+BEGIN;
+
+DROP FUNCTION IF EXISTS my_function(UUID, TEXT);
+
+CREATE FUNCTION my_function(p_id UUID, p_name TEXT)
+RETURNS ... AS $$
+BEGIN
+  ...
+END;
+$$ LANGUAGE plpgsql;
+
+COMMIT;
+```
+
+The `DROP FUNCTION IF EXISTS` signature must list parameter types only (no names), matching the function's argument list exactly.
+
+## Mutating functions must return the affected row
+
+Functions that INSERT or UPDATE must return the affected row using `RETURNING *` (or a specific column list). Never return `VOID` from a mutating function. Services must return `Model.from_row(result.first)` so callers always have the updated object — never a bare id.
+
+```sql
+-- GOOD
+CREATE FUNCTION update_thing(p_id UUID, p_name TEXT)
+RETURNS SETOF things AS $$
+BEGIN
+  RETURN QUERY
+  UPDATE things SET name = p_name WHERE id = p_id
+  RETURNING *;
+END;
+$$ LANGUAGE plpgsql;
+
+-- BAD
+CREATE FUNCTION update_thing(p_id UUID, p_name TEXT)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE things SET name = p_name WHERE id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+```

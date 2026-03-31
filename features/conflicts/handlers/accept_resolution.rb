@@ -6,9 +6,9 @@ module Conflicts
       extend Patterns::Service
 
       def call(params:)
-        Services::AcceptResolution.call(id: params[:id])
+        conflict = Services::AcceptResolution.call(id: params[:id])
 
-        { id: params[:id] }
+        { conflict: }
       end
     end
   end

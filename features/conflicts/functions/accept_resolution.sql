@@ -1,5 +1,9 @@
-CREATE OR REPLACE FUNCTION accept_resolution(p_id UUID)
-RETURNS VOID AS $$
+BEGIN;
+
+DROP FUNCTION IF EXISTS accept_resolution(UUID);
+
+CREATE FUNCTION accept_resolution(p_id UUID)
+RETURNS SETOF conflicts AS $$
 DECLARE
   v_conflict conflicts%ROWTYPE;
 BEGIN
@@ -8,6 +12,7 @@ BEGIN
   INSERT INTO conflict_resolutions (conflict_id, status, favor)
   VALUES (p_id, v_conflict.proposed_status, v_conflict.favor);
 
+  RETURN QUERY
   UPDATE conflicts
   SET
     status = v_conflict.proposed_status::conflict_status,
@@ -15,6 +20,9 @@ BEGIN
     proposed_status = NULL,
     proposed_by_id = NULL,
     updated_at = CURRENT_TIMESTAMP
-  WHERE id = p_id;
+  WHERE id = p_id
+  RETURNING *;
 END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;

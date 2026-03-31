@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION create_conflict(
+BEGIN;
+
+DROP FUNCTION IF EXISTS create_conflict(UUID, UUID, TEXT, TEXT, TEXT);
+
+CREATE FUNCTION create_conflict(
   p_couple_id UUID,
   p_creator_id UUID,
   p_title TEXT,
@@ -24,3 +28,5 @@ BEGIN
       conflicts.created_at, conflicts.updated_at, conflicts.archived_at;
 END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;

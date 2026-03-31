@@ -6,9 +6,9 @@ module Conflicts
       extend Patterns::Service
 
       def call(params:)
-        Services::Reopen.call(id: params[:id])
+        conflict = Services::Reopen.call(id: params[:id])
 
-        { id: params[:id] }
+        { conflict: }
       end
     end
   end

@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION get_couple_for_user(p_user_id UUID)
+BEGIN;
+
+DROP FUNCTION IF EXISTS get_couple_for_user(UUID);
+
+CREATE FUNCTION get_couple_for_user(p_user_id UUID)
 RETURNS TABLE(id UUID, partner1_id UUID, partner2_id UUID, disconnected_partner_id UUID) AS $$
 BEGIN
   RETURN QUERY
@@ -13,3 +17,5 @@ BEGIN
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;

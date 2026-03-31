@@ -1,4 +1,8 @@
-CREATE OR REPLACE FUNCTION get_conflict(p_id UUID)
+BEGIN;
+
+DROP FUNCTION IF EXISTS get_conflict(UUID);
+
+CREATE FUNCTION get_conflict(p_id UUID)
 RETURNS TABLE(
   id UUID, couple_id UUID, creator_id UUID,
   title TEXT, description TEXT, favor TEXT,
@@ -18,3 +22,5 @@ BEGIN
     WHERE c.id = p_id;
 END;
 $$ LANGUAGE plpgsql;
+
+COMMIT;

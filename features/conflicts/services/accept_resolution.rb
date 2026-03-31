@@ -6,12 +6,12 @@ module Conflicts
       extend Patterns::Service
 
       def call(id:)
-        DB.connection.exec_params(
-          'SELECT accept_resolution($1)',
+        result = DB.connection.exec_params(
+          'SELECT * FROM accept_resolution($1)',
           [id]
         )
 
-        nil
+        Conflict.from_row(result.first)
       end
     end
   end
