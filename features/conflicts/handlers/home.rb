@@ -18,7 +18,8 @@ module Conflicts
           drafts: lists[:drafts],
           pending_mine: lists[:pending_mine],
           pending_partner: lists[:pending_partner],
-          active: lists[:active]
+          active: lists[:active],
+          archived: lists[:archived]
         }
       end
     end

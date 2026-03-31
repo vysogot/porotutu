@@ -19,7 +19,8 @@ module Conflicts
           drafts: conflicts.select { |c| c.status == 'draft' && c.creator_id == user_id },
           pending_mine: conflicts.select { |c| c.status == 'pending' && c.creator_id == user_id },
           pending_partner: conflicts.select { |c| c.status == 'pending' && c.creator_id != user_id },
-          active: conflicts.select { |c| c.status == 'active' }
+          active: conflicts.select { |c| c.status == 'active' },
+          archived: conflicts.select { |c| !c.archived_at.nil? }
         }
       end
     end

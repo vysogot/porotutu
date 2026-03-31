@@ -20,7 +20,6 @@ BEGIN
       c.created_at, c.updated_at, c.archived_at
     FROM conflicts c
     WHERE c.couple_id = p_couple_id
-      AND c.archived_at IS NULL
     ORDER BY c.created_at DESC;
 END;
 $$ LANGUAGE plpgsql;

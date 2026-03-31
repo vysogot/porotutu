@@ -2,7 +2,7 @@
   <turbo-frame id="conflict-<%= conflict.id %>">
     <article>
       <header><h3>Edit conflict</h3></header>
-      <form method="post" action="/conflicts/<%= conflict.id %>">
+      <form method="patch" action="/conflicts/<%= conflict.id %>">
         <input type="hidden" name="_method" value="patch"/>
         <label for="title">
           What's it about?

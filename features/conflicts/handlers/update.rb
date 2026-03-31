@@ -11,8 +11,8 @@ module Conflicts
         conflict = Services::Update.call(
           id: params[:id],
           title: params[:title],
-          description: params[:description].to_s,
-          favor: params[:favor].presence
+          description: params[:description],
+          favor: params[:favor]
         )
 
         { conflict:, current_user_id: }

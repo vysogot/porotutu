@@ -18,8 +18,7 @@
           <form method="post" action="/conflicts/<%= conflict.id %>/share">
             <button type="submit">Share with partner</button>
           </form>
-          <form method="post" action="/conflicts/<%= conflict.id %>">
-            <input type="hidden" name="_method" value="delete"/>
+          <form method="delete" action="/conflicts/<%= conflict.id %>">
             <button type="submit" class="secondary outline">Delete</button>
           </form>
         </div>

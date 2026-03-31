@@ -11,8 +11,8 @@ module Conflicts
         conflict = Services::Create.call(
           user_id: current_user_id,
           title: params[:title],
-          description: params[:description].to_s,
-          favor: params[:favor].presence
+          description: params[:description],
+          favor: params[:favor]
         )
 
         { conflict:, current_user_id: }

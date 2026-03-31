@@ -21,14 +21,14 @@ module Conflicts
     post '/conflicts' do
       locals = Handlers::Create.call(params:, current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :create, layout: false, locals:
     end
 
     post '/conflicts/reveal' do
       locals = Handlers::Reveal.call(current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :reveal_stream, layout: false, locals:
     end
 
@@ -47,49 +47,49 @@ module Conflicts
     patch '/conflicts/:id' do
       locals = Handlers::Update.call(params:, current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :update, layout: false, locals:
     end
 
     delete '/conflicts/:id' do
       locals = Handlers::Delete.call(params:)
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :delete, layout: false, locals:
     end
 
     post '/conflicts/:id/share' do
       locals = Handlers::Share.call(params:, current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :share, layout: false, locals:
     end
 
     post '/conflicts/:id/unshare' do
       locals = Handlers::Unshare.call(params:, current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :unshare, layout: false, locals:
     end
 
     post '/conflicts/:id/propose' do
       locals = Handlers::ProposeResolution.call(params:, current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :propose, layout: false, locals:
     end
 
     post '/conflicts/:id/accept' do
       locals = Handlers::AcceptResolution.call(params:)
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :accept, layout: false, locals:
     end
 
     post '/conflicts/:id/decline' do
       locals = Handlers::DeclineResolution.call(params:, current_user_id: session['user_id'])
 
-      content_type 'text/vnd.turbo-stream.html'
+      content_type settings.turbo_stream
       conflicts_erb :decline, layout: false, locals:
     end
 

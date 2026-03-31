@@ -18,6 +18,10 @@ loader.ignore(
 )
 loader.setup
 
+class Sinatra::Base
+  set :turbo_stream, 'text/vnd.turbo-stream.html'
+end
+
 class App < Sinatra::Base
   configure :development do
     register Sinatra::Reloader

@@ -12,7 +12,7 @@ module Auth
       locals = Handlers::Login.call(params:)
 
       session['user_id'] = locals[:user].id
-      redirect '/', 303
+      redirect '/conflicts', 303
     rescue Errors::InvalidCredentials => e
       auth_erb :new, locals: { error: e.message }
     end
