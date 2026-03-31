@@ -1,12 +1,97 @@
-<turbo-frame id="conflicts_<%= id %>">
-  <div data-controller="conflict" class="grid">
-    <h2 data-conflict-target="source"><%= name %></h2>
-    <p>
-      <a role="button" href="/<%= id %>/edit">Edit</a>
-      <form method="delete" action="/<%= id %>">
-        <button data-action="conflict#copy" class="contrast outline">Copy to clipboard</button>
-        <button class="contrast outline" type="submit">Delete</button>
-      </form>
-    </p>
-  </div>
+<turbo-frame id="conflict-<%= conflict.id %>">
+  <article>
+    <header>
+      <h3><%= conflict.title %></h3>
+      <% if conflict.favor %>
+        <small>Favor: <%= conflict.favor %></small>
+      <% end %>
+    </header>
+
+    <% if conflict.description && !conflict.description.empty? %>
+      <p><%= conflict.description %></p>
+    <% end %>
+
+    <% if conflict.status == 'draft' %>
+      <footer>
+        <div class="grid">
+          <a href="/conflicts/<%= conflict.id %>/edit" role="button" class="outline">Edit</a>
+          <form method="post" action="/conflicts/<%= conflict.id %>/share">
+            <button type="submit">Share with partner</button>
+          </form>
+          <form method="post" action="/conflicts/<%= conflict.id %>">
+            <input type="hidden" name="_method" value="delete"/>
+            <button type="submit" class="secondary outline">Delete</button>
+          </form>
+        </div>
+      </footer>
+
+    <% elsif conflict.status == 'pending' && conflict.creator_id == current_user_id %>
+      <footer>
+        <p><em>Waiting for your partner to reveal conflicts...</em></p>
+        <form method="post" action="/conflicts/<%= conflict.id %>/unshare">
+          <button type="submit" class="outline">Unshare</button>
+        </form>
+      </footer>
+
+    <% elsif conflict.status == 'active' %>
+      <% if conflict.deadline %>
+        <p><small>Deadline: <%= conflict.deadline %></small></p>
+      <% end %>
+
+      <% if conflict.proposed_status %>
+        <% if conflict.proposed_by_id == current_user_id %>
+          <div class="notice">
+            <p>You proposed: <strong><%= conflict.proposed_status %></strong></p>
+            <form method="post" action="/conflicts/<%= conflict.id %>/decline">
+              <button type="submit" class="outline">Withdraw proposal</button>
+            </form>
+          </div>
+        <% else %>
+          <div class="notice">
+            <p>Partner proposes: <strong><%= conflict.proposed_status %></strong></p>
+            <div class="grid">
+              <form method="post" action="/conflicts/<%= conflict.id %>/accept">
+                <button type="submit">Agree</button>
+              </form>
+              <form method="post" action="/conflicts/<%= conflict.id %>/decline">
+                <button type="submit" class="outline">Decline</button>
+              </form>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <footer>
+          <details>
+            <summary role="button" class="outline">Propose resolution</summary>
+            <div class="grid">
+              <form method="post" action="/conflicts/<%= conflict.id %>/propose">
+                <input type="hidden" name="status" value="resolved"/>
+                <button type="submit">Resolved</button>
+              </form>
+              <form method="post" action="/conflicts/<%= conflict.id %>/propose">
+                <input type="hidden" name="status" value="postponed"/>
+                <button type="submit" class="outline">Postpone</button>
+              </form>
+              <form method="post" action="/conflicts/<%= conflict.id %>/propose">
+                <input type="hidden" name="status" value="favor_done"/>
+                <button type="submit" class="outline">Favor done</button>
+              </form>
+              <form method="post" action="/conflicts/<%= conflict.id %>/propose">
+                <input type="hidden" name="status" value="canceled"/>
+                <button type="submit" class="secondary outline">Cancel</button>
+              </form>
+            </div>
+          </details>
+        </footer>
+      <% end %>
+
+    <% elsif conflict.archived_at %>
+      <footer>
+        <p><small>Resolved as: <%= conflict.status %></small></p>
+        <form method="post" action="/conflicts/<%= conflict.id %>/reopen">
+          <button type="submit" class="outline">Reopen</button>
+        </form>
+      </footer>
+    <% end %>
+  </article>
 </turbo-frame>

@@ -1,14 +1,43 @@
-<turbo-frame id="new_conflicts_frame">
-  <form action="/conflicts" method="post">
-    <div class="grid">
-      <input type="text" name="name" placeholder="Give it an awesome name" aria-label="Name" required/>
-      <button type="submit">Create</button>
-    </div>
-    <fieldset>
-      <label for="promise">
-        <input type="checkbox" role="switch" id="promise" name="promise"/>
-        I will do it. Many times.
+<main class="container">
+  <h2>New conflict</h2>
+  <turbo-frame id="new_conflict_frame">
+    <form action="/conflicts" method="post">
+      <label for="title">
+        What's it about?
+        <input
+          type="text"
+          id="title"
+          name="title"
+          placeholder="e.g. Who does the dishes"
+          maxlength="120"
+          required
+          autofocus
+        />
       </label>
-    </fieldset>
-  </form>
-</turbo-frame>
+      <label for="description">
+        Describe the conflict
+        <textarea
+          id="description"
+          name="description"
+          placeholder="Give some context..."
+          maxlength="1000"
+          rows="4"
+        ></textarea>
+      </label>
+      <label for="favor">
+        What's the favor? (what the winner gets)
+        <input
+          type="text"
+          id="favor"
+          name="favor"
+          placeholder="e.g. The other person cooks for a week"
+          maxlength="200"
+        />
+      </label>
+      <div class="grid">
+        <button type="submit">Create conflict</button>
+        <a href="/conflicts" role="button" class="secondary outline">Cancel</a>
+      </div>
+    </form>
+  </turbo-frame>
+</main>

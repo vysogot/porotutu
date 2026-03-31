@@ -2,6 +2,12 @@
 
 require 'dotenv/load'
 require 'pg'
+require 'rake/testtask'
+
+Rake::TestTask.new(:test) do |t|
+  t.libs << '.'
+  t.pattern = 'tests/**/*_test.rb'
+end
 
 DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/porotutu')
 DB_DIR = File.expand_path('db', __dir__)

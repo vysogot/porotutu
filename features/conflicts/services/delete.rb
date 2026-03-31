@@ -5,11 +5,13 @@ module Conflicts
     class Delete
       extend Patterns::Service
 
-      def call(params:)
+      def call(id:)
         DB.connection.exec_params(
           'SELECT delete_conflict($1)',
-          [params[:id]]
+          [id]
         )
+
+        nil
       end
     end
   end

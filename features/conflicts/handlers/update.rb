@@ -5,13 +5,17 @@ module Conflicts
     class Update
       extend Patterns::Service
 
-      def call(params:)
-        conflicts = Services::Update.call(params:)
+      def call(params:, current_user_id:)
+        params = params.slice(:id, :title, :description, :favor)
 
-        {
-          id: conflicts.id,
-          name: conflicts.name
-        }
+        conflict = Services::Update.call(
+          id: params[:id],
+          title: params[:title],
+          description: params[:description].to_s,
+          favor: params[:favor].presence
+        )
+
+        { conflict:, current_user_id: }
       end
     end
   end

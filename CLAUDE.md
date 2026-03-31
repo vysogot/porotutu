@@ -12,6 +12,7 @@ rake db:migrate         # Run pending migrations
 rake db:functions       # Load/reload all SQL functions
 rake db:seed            # Seed the database
 rake db:reset           # Drop, recreate, migrate, functions, seed (dev/test only)
+rake test               # Run all tests
 ```
 
 Set `DATABASE_URL` to your Postgres connection string (defaults to `postgres://localhost/porotutu`).
@@ -79,6 +80,25 @@ Then in `app.rb`, add `use Feature::Routes`.
 - All code is namespaced under `FeatureName::` (e.g., `Conflicts::Services::Create`)
 - Features are organized by domain (`features/<name>/`), not by technical layer
 - Handlers whitelist params before passing to services
+
+## Testing
+
+Tests live in `tests/`, not inside `features/`. Structure:
+
+```
+tests/
+  test_helper.rb              # Zeitwerk boot, DB connection, base TestCase (BEGIN/ROLLBACK)
+  <feature>/
+    helpers.rb                # Feature-specific factory helpers as an includeable module
+    test_helper.rb            # require both above; includes helpers into TestCase
+    *_test.rb                 # require_relative 'test_helper'
+```
+
+Each test runs inside a transaction rolled back on teardown — no data persists between tests.
+
+`TestCase` lives in `<Feature>::Tests::TestCase`. Factory helpers (`create_user`, `create_couple`, etc.) live in `<Feature>::Tests::Helpers` and are included into `TestCase` via the feature's `test_helper.rb`.
+
+Use `BCrypt::Engine::MIN_COST` when hashing passwords in tests — default cost adds ~350ms per call.
 
 ## Coding Rules
 

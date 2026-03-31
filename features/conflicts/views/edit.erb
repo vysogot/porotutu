@@ -1,7 +1,45 @@
-<turbo-frame id="conflicts_<%= id %>">
-  <h2>Edit conflict</h2>
-  <form action="/<%= id %>" method="put">
-    <input type="text" value="<%= name %>" name="name"/>
-    <input type="submit" value="Update"/>
-  </form>
-</turbo-frame>
+<main class="container">
+  <turbo-frame id="conflict-<%= conflict.id %>">
+    <article>
+      <header><h3>Edit conflict</h3></header>
+      <form method="post" action="/conflicts/<%= conflict.id %>">
+        <input type="hidden" name="_method" value="patch"/>
+        <label for="title">
+          What's it about?
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value="<%= conflict.title %>"
+            maxlength="120"
+            required
+            autofocus
+          />
+        </label>
+        <label for="description">
+          Describe the conflict
+          <textarea
+            id="description"
+            name="description"
+            maxlength="1000"
+            rows="4"
+          ><%= conflict.description %></textarea>
+        </label>
+        <label for="favor">
+          What's the favor?
+          <input
+            type="text"
+            id="favor"
+            name="favor"
+            value="<%= conflict.favor %>"
+            maxlength="200"
+          />
+        </label>
+        <div class="grid">
+          <button type="submit">Save</button>
+          <a href="/conflicts/<%= conflict.id %>" role="button" class="secondary outline">Cancel</a>
+        </div>
+      </form>
+    </article>
+  </turbo-frame>
+</main>
