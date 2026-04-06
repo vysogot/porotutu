@@ -35,7 +35,7 @@ BEGIN
       c.updated_at,
       c.archived_at
     FROM conflicts c
-    WHERE c.couple_id = p_couple_id
+    WHERE c.creator_id = p_user_id
     ORDER BY c.created_at DESC;
 END;
 $$ LANGUAGE plpgsql;

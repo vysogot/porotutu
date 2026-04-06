@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Conflicts
-  module Mappers
-    module Crud
+  module Crud
+    module Mappers
       FIELDS = [
         :id,
-        :couple_id,
         :creator_id,
         :title,
         :description,
@@ -24,7 +23,6 @@ module Conflicts
         def self.from_row(row)
           new(
             id: row['id'],
-            couple_id: row['couple_id'],
             creator_id: row['creator_id'],
             title: row['title'],
             description: row['description'],

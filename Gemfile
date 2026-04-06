@@ -4,10 +4,10 @@ source 'https://rubygems.org'
 
 ruby '4.0.1'
 
+gem 'debug'
 gem 'dotenv'
 gem 'erb-formatter'
 gem 'pg'
-gem 'pry'
 gem 'puma'
 gem 'rackup'
 gem 'rake'

@@ -1,11 +1,10 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS conflicts_crud_show(UUID);
+DROP FUNCTION IF EXISTS conflicts_crud_find(UUID);
 
-CREATE FUNCTION conflicts_crud_show(p_id UUID)
+CREATE FUNCTION conflicts_crud_find(p_id UUID)
 RETURNS TABLE(
   id UUID,
-  couple_id UUID,
   creator_id UUID,
   title TEXT,
   description TEXT,
@@ -23,7 +22,6 @@ BEGIN
   RETURN QUERY
     SELECT
       c.id,
-      c.couple_id,
       c.creator_id,
       c.title,
       c.description,

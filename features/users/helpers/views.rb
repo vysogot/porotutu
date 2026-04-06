@@ -2,7 +2,7 @@
 
 module Users
   module Helpers
-    module Paths
+    module Views
       include Patterns::Views
 
       VIEWS_DIR = File.expand_path('../views', __dir__)

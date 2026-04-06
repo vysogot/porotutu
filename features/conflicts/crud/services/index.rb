@@ -6,10 +6,10 @@ module Conflicts
       class Index
         extend Patterns::Service
 
-        def call(couple_id:, user_id:)
+        def call(user_id:)
           result = DB.connection.exec_params(
-            'SELECT * FROM conflicts_crud_index($1, $2)',
-            [couple_id, user_id]
+            'SELECT * FROM conflicts_crud_index($1)',
+            [user_id]
           )
 
           conflicts = result.map do |row|

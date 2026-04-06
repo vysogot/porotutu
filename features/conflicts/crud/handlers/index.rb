@@ -3,14 +3,13 @@
 module Conflicts
   module Crud
     module Handlers
-      class Home
+      class Index
         extend Patterns::Service
 
         def call(current_user_id:)
           conflicts = Services::Index.call(user_id: current_user_id)
 
           {
-            couple:,
             current_user_id:,
             drafts: conflicts[:drafts],
             pending_mine: conflicts[:pending_mine],

@@ -1,1 +1,50 @@
-<turbo-frame id="conflicts">#{conflicts}</turbo-frame>
+<header class="container">
+  <hgroup>
+    <h1>Couple of Conflicts</h1>
+    <p>Track and resolve conflicts together.</p>
+  </hgroup>
+  <nav>
+    <a href="/conflicts/new" role="button" class="outline">+ New conflict</a>
+  </nav>
+</header>
+
+<main class="container">
+  <% if drafts.empty? && active.empty? %>
+    <article>
+      <p>No conflicts yet. Start one to get the conversation going.</p>
+    </article>
+  <% end %>
+
+  <% unless drafts.empty? %>
+    <section>
+      <h2>Your drafts</h2>
+      <div id="conflicts-drafts">
+        <% drafts.each do |conflict| %>
+          <%= view :show, layout: false, locals: { conflict: } %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% unless active.empty? %>
+    <section>
+      <h2>Active conflicts</h2>
+      <div id="conflicts-active">
+        <% active.each do |conflict| %>
+          <%= view :show, layout: false, locals: { conflict: } %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <% unless archived.empty? %>
+    <section>
+      <h2>Archived conflicts</h2>
+      <div id="conflicts-archived">
+        <% archived.each do |conflict| %>
+          <%= view :show, layout: false, locals: { conflict: } %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</main>

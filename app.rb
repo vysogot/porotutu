@@ -5,6 +5,7 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'bcrypt'
 require 'pg'
+require 'debug'
 
 require_relative 'patterns/database'
 
@@ -40,4 +41,8 @@ class App < Sinatra::Base
   use Auth::Routes
   use Users::Routes
   use Conflicts::Routes
+
+  get '/' do
+    redirect '/conflicts'
+  end
 end

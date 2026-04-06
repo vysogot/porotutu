@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
 module Conflicts
-  module Sharing
+  module Crud
     module Services
-      class Unshare
+      class Find
         extend Patterns::Service
 
         def call(id:)
           result = DB.connection.exec_params(
-            'SELECT * FROM conflicts_sharing_unshare($1)',
+            'SELECT * FROM conflicts_crud_find($1)',
             [id]
           )
 
-          Mappers::Conflict.from_row(result.first)
+          row = result.first
+          return nil unless row
+
+          Mappers::Conflict.from_row(row)
         end
       end
     end

@@ -2,7 +2,7 @@
 
 module Auth
   class Routes < Sinatra::Base
-    include Helpers::Paths
+    include Helpers::Views
 
     get '/login' do
       auth_erb :new, locals: { error: nil }

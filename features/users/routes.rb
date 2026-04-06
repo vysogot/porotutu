@@ -2,7 +2,7 @@
 
 module Users
   class Routes < Sinatra::Base
-    include Helpers::Paths
+    include Helpers::Views
 
     get '/register' do
       users_erb :new

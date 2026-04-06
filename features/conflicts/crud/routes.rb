@@ -31,7 +31,7 @@ module Conflicts
         locals = Handlers::Create.call(params:, current_user_id: session['user_id'])
 
         content_type settings.turbo_stream
-        view :create, layout: false, locals:
+        view :show, locals:
       end
 
       patch '/conflicts/:id' do
