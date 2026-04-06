@@ -29,12 +29,30 @@ Porotutu is a Sinatra + Turbo + PostgreSQL conflict tracker. The codebase follow
 
 - **app.rb** — Configuration and `use Feature::Routes` mounts only. No routes defined here.
 - **routes.rb** — Sinatra route definitions for a feature. Lives at `features/<name>/routes.rb` as `Feature::Routes < Sinatra::Base`.
-- **handlers/** — Thin layer: whitelist/slice params, call one service, return locals hash for the view.
-- **services/** — One class per operation. Extend `Patterns::Service`. Call a SQL function via `DB.connection`. Return a model struct.
-- **functions/** — SQL functions (`CREATE OR REPLACE`). One file per function. Loaded via `rake db:functions`.
-- **models/** — Plain `Data.define` structs; no ORM. E.g. `Feature::Thing = Data.define(:id, :name)`.
-- **views/** — ERB templates. A named `feature_erb()` helper (e.g. `conflicts_erb`) in `helpers/paths.rb` resolves paths within the feature namespace. Shared layout lives in `layouts/main.erb`.
-- **errors/** — Custom `StandardError` subclasses raised by services, rescued in routes.
+- **handlers/** — Thin layer: whitelist/slice params, call one service, return locals hash for the view. Validation (presence, format) goes here — after whitelisting, before calling the service.
+- **services/** — One class per operation. Extend `Patterns::Service`. Call a SQL function via `DB.connection`. Return a mapper struct. Authorization (ownership checks) goes here — before mutating.
+- **functions/** — SQL functions. One file per function. Loaded via `rake db:functions`.
+- **mappers/** — Plain `Data.define` structs with a `from_row` class method for DB row casting. One file per entity. Services call `Mapper.from_row(result.first)` — never inline `Model.new(...)` with raw row access.
+- **views/** — ERB templates. A `view()` helper in `helpers/views.rb` resolves paths within the feature namespace. Shared layout lives in `layouts/main.erb`.
+- **errors/** — Custom `StandardError` subclasses raised by handlers (validation) or services (authorization). Rescued in routes.
+
+### Nested features
+
+A feature can contain sub-features (e.g. `conflicts/crud`). The parent `routes.rb` mounts the sub-feature's routes via `use SubFeature::Routes`. Code is namespaced accordingly: `Conflicts::Crud::Services::Create`, etc.
+
+```
+features/conflicts/
+  routes.rb             # mounts Crud::Routes
+  crud/
+    routes.rb           # actual HTTP endpoints
+    handlers/
+    services/
+    mappers/
+    functions/
+    views/
+    helpers/
+    errors/
+```
 
 ### Adding a new feature
 
@@ -43,30 +61,33 @@ Create `features/<name>/` with:
 ```
 features/<name>/
   routes.rb             # Feature::Routes < Sinatra::Base
-  models/<name>.rb      # Feature::Thing = Data.define(...)
-  handlers/home.rb      # list
+  mappers/<name>.rb     # Feature::Thing = Data.define(...) { def self.from_row... }
+  handlers/index.rb
+  handlers/show.rb
+  handlers/new.rb
   handlers/create.rb
   handlers/edit.rb
   handlers/update.rb
   handlers/delete.rb
-  services/list.rb      # calls get_<things>()
-  services/find.rb      # calls get_<thing>(id)
-  services/create.rb    # calls create_<thing>(...)
-  services/update.rb    # calls update_<thing>(...)
-  services/delete.rb    # calls delete_<thing>(id)
-  functions/get_<things>.sql
-  functions/get_<thing>.sql
-  functions/create_<thing>.sql
-  functions/update_<thing>.sql
-  functions/delete_<thing>.sql
-  views/home.erb
+  services/index.rb     # calls <feature>_index()
+  services/find.rb      # calls <feature>_find(id)
+  services/create.rb    # calls <feature>_create(...)
+  services/update.rb    # calls <feature>_update(...)
+  services/delete.rb    # calls <feature>_delete(id)
+  functions/index.sql
+  functions/find.sql
+  functions/create.sql
+  functions/update.sql
+  functions/delete.sql
+  views/index.erb
   views/new.erb
-  views/create.erb
-  views/edit.erb
   views/show.erb
-  views/delete.erb
-  helpers/paths.rb      # include Patterns::Views; wraps feature_erb() with named helper
-  errors/               # custom StandardError subclasses, raised by services
+  views/edit.erb
+  views/create.erb      # Turbo Stream response
+  views/update.erb      # Turbo Stream response
+  views/delete.erb      # Turbo Stream response
+  helpers/views.rb      # include Patterns::Views; defines view() helper
+  errors/               # custom StandardError subclasses
 ```
 
 Then in `app.rb`, add `use Feature::Routes`.
@@ -77,9 +98,9 @@ Then in `app.rb`, add `use Feature::Routes`.
 
 **Conventions:**
 - All Ruby files use `# frozen_string_literal: true`
-- All code is namespaced under `FeatureName::` (e.g., `Conflicts::Services::Create`)
+- All code is namespaced under `FeatureName::` (e.g., `Conflicts::Crud::Services::Create`)
 - Features are organized by domain (`features/<name>/`), not by technical layer
-- Handlers whitelist params before passing to services
+- Handlers whitelist params before validating; services authorize before mutating
 
 ## Testing
 
@@ -107,4 +128,4 @@ See [`.claude/rules/`](.claude/rules/) for detailed rules.
 - **SQL** — [`.claude/rules/sql.md`](.claude/rules/sql.md): always put SQL string on its own line; all queries go through named SQL functions
 - **Sinatra** — [`.claude/rules/sinatra.md`](.claude/rules/sinatra.md): use `register Sinatra::Reloader` inside `configure :development` in the class, not at top level
 - **Turbo** — [`.claude/rules/turbo.md`](.claude/rules/turbo.md): auth forms need `data-turbo="false"`; redirects after form submission use `303`
-- **Models** — [`.claude/rules/models.md`](.claude/rules/models.md): define `from_row` on the model for DB row casting; never inline `Model.new(...)` with raw row access in services
+- **Models** — [`.claude/rules/models.md`](.claude/rules/models.md): define `from_row` on the mapper for DB row casting; never inline `Model.new(...)` with raw row access in services
