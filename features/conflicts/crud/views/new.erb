@@ -1,7 +1,6 @@
-<main class="container">
+<main class="container" id="new_conflict_frame">
   <h2>New conflict</h2>
-  <turbo-frame id="new_conflict_frame">
-    <form action="/conflicts" method="post">
+  <form action="/conflicts" method="post">
       <label for="title">
         What's it about?
         <input
@@ -38,6 +37,5 @@
         <button type="submit">Create conflict</button>
         <a href="/conflicts" role="button" class="secondary outline">Cancel</a>
       </div>
-    </form>
-  </turbo-frame>
+  </form>
 </main>
