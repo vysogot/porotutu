@@ -1,0 +1,73 @@
+<header class="container">
+  <hgroup>
+    <h1>Porotutu</h1>
+    <p>Track and resolve conflicts together.</p>
+  </hgroup>
+  <nav>
+    <a href="/conflicts/new" role="button" class="outline">+ New conflict</a>
+  </nav>
+</header>
+
+<main class="container">
+  <% if couple.nil? %>
+    <article>
+      <p>You are not part of a couple yet. Ask your partner to connect with you.</p>
+    </article>
+  <% else %>
+    <% if drafts.empty? && pending_mine.empty? && pending_partner.empty? && active.empty? %>
+      <article>
+        <p>No conflicts yet. Start one to get the conversation going.</p>
+      </article>
+    <% end %>
+
+    <section>
+      <h2>Your drafts</h2>
+      <div id="conflicts-drafts">
+        <% drafts.each do |conflict| %>
+          <%= view :show, layout: false, locals: { conflict:, current_user_id: } %>
+        <% end %>
+      </div>
+    </section>
+
+    <% unless pending_mine.empty? %>
+      <section>
+        <h2>Shared — awaiting partner</h2>
+        <div id="conflicts-pending-mine">
+          <% pending_mine.each do |conflict| %>
+            <%= view :show, layout: false, locals: { conflict:, current_user_id: } %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% unless pending_partner.empty? %>
+      <section>
+        <turbo-frame id="pending-partner" src="/conflicts/reveal">
+          <p>Your partner wants to share <%= pending_partner.size %> conflict(s). <a href="/conflicts/reveal">Show me</a></p>
+        </turbo-frame>
+      </section>
+    <% end %>
+
+    <% unless active.empty? %>
+      <section>
+        <h2>Active conflicts</h2>
+        <div id="conflicts-active">
+          <% active.each do |conflict| %>
+            <%= view :show, layout: false, locals: { conflict:, current_user_id: } %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+
+    <% unless archived.empty? %>
+      <section>
+        <h2>Archived conflicts</h2>
+        <div id="conflicts-archived">
+          <% archived.each do |conflict| %>
+            <%= view :show, layout: false, locals: { conflict:, current_user_id: } %>
+          <% end %>
+        </div>
+      </section>
+    <% end %>
+  <% end %>
+</main>
