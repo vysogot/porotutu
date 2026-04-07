@@ -15,13 +15,8 @@ RETURNS TABLE(
   description TEXT,
   favor TEXT,
   status TEXT,
-  deadline TIMESTAMP,
-  recur_count INTEGER,
-  proposed_status TEXT,
-  proposed_by_id UUID,
   created_at TIMESTAMP,
-  updated_at TIMESTAMP,
-  archived_at TIMESTAMP
+  updated_at TIMESTAMP
 ) AS $$
 BEGIN
   RETURN QUERY
@@ -34,13 +29,8 @@ BEGIN
       conflicts.description,
       conflicts.favor,
       conflicts.status::TEXT,
-      conflicts.deadline,
-      conflicts.recur_count,
-      conflicts.proposed_status,
-      conflicts.proposed_by_id,
       conflicts.created_at,
-      conflicts.updated_at,
-      conflicts.archived_at;
+      conflicts.updated_at;
 END;
 $$ LANGUAGE plpgsql;
 

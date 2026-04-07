@@ -10,6 +10,7 @@
 
 <main class="container">
   <% if drafts.empty? && active.empty? %>
+
     <article>
       <p>No conflicts yet. Start one to get the conversation going.</p>
     </article>
@@ -37,14 +38,4 @@
     </section>
   <% end %>
 
-  <% unless archived.empty? %>
-    <section>
-      <h2>Archived conflicts</h2>
-      <div id="conflicts-archived">
-        <% archived.each do |conflict| %>
-          <%= view :show, layout: false, locals: { conflict: } %>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
 </main>

@@ -12,10 +12,7 @@ module Conflicts
           {
             current_user_id:,
             drafts: conflicts[:drafts],
-            pending_mine: conflicts[:pending_mine],
-            pending_partner: conflicts[:pending_partner],
-            active: conflicts[:active],
-            archived: conflicts[:archived]
+            active: conflicts[:active]
           }
         end
       end

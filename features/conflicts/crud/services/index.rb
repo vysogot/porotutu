@@ -17,11 +17,8 @@ module Conflicts
           end
 
           {
-            drafts: conflicts.select { |c| c.status == 'draft' && c.creator_id == user_id },
-            pending_mine: conflicts.select { |c| c.status == 'pending' && c.creator_id == user_id },
-            pending_partner: conflicts.select { |c| c.status == 'pending' && c.creator_id != user_id },
-            active: conflicts.select { |c| c.status == 'active' },
-            archived: conflicts.select { |c| !c.archived_at.nil? }
+            drafts: conflicts.select { |c| c.status == 'draft' },
+            active: conflicts.select { |c| c.status == 'active' }
           }
         end
       end
