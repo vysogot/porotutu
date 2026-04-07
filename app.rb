@@ -12,7 +12,6 @@ require_relative 'patterns/database'
 loader = Zeitwerk::Loader.new
 loader.push_dir(__dir__)
 loader.collapse("#{__dir__}/features")
-loader.collapse(Dir.glob("#{__dir__}/features/*/models"))
 loader.ignore(
   "#{__dir__}/app.rb",
   "#{__dir__}/patterns/database.rb"
@@ -28,6 +27,7 @@ class App < Sinatra::Base
     register Sinatra::Reloader
     also_reload File.join(__dir__, 'patterns/**/*.rb')
     also_reload File.join(__dir__, 'features/**/*.rb')
+    also_reload File.join(__dir__, 'mappers/**/*.rb')
   end
 
   set :public_folder, File.join(__dir__, 'public')

@@ -15,7 +15,7 @@ module Auth
 
         validate!(row, params[:password])
 
-        Users::User.new(id: row['id'], email: row['email'])
+        ::Mappers::User.new(id: row['id'], email: row['email'])
       end
 
       private

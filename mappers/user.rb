@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module Users
+module Mappers
   User = Data.define(:id, :email)
 end

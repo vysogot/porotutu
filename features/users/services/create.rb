@@ -15,7 +15,7 @@ module Users
 
         row = result.first
 
-        User.new(id: row['id'], email: row['email'])
+        ::Mappers::User.new(id: row['id'], email: row['email'])
       end
     end
   end
