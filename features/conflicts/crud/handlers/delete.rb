@@ -6,10 +6,10 @@ module Conflicts
       class Delete
         extend Patterns::Service
 
-        def call(params:)
-          Services::Delete.call(id: params[:id])
+        def call(params:, current_user_id:)
+          Services::Delete.call(id: params[:id], user_id: current_user_id)
 
-          { id: params[:id] }
+          nil
         end
       end
     end

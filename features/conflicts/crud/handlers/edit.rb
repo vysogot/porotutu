@@ -6,8 +6,8 @@ module Conflicts
       class Edit
         extend Patterns::Service
 
-        def call(params:)
-          conflict = Services::FindById.call(id: params[:id])
+        def call(params:, current_user_id:)
+          conflict = Services::FindOne.call(id: params[:id], user_id: current_user_id)
 
           { conflict: }
         end

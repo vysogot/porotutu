@@ -1,0 +1,26 @@
+<turbo-frame id="conflict-<%= conflict.id %>">
+  <article>
+    <header>
+      <h3><a href="/conflicts/<%= conflict.id %>" data-turbo-frame="_top"><%= conflict.title %></a></h3>
+      <% if conflict.favor %>
+        <small>Favor: <%= conflict.favor %></small>
+      <% end %>
+    </header>
+
+    <% if conflict.description && !conflict.description.empty? %>
+      <p><%= conflict.description %></p>
+    <% end %>
+
+    <% if conflict.status == 'draft' %>
+      <footer>
+        <div class="grid">
+          <a href="/conflicts/<%= conflict.id %>/edit" role="button" class="outline">Edit</a>
+          <form method="delete" action="/conflicts/<%= conflict.id %>" data-turbo-frame="_top">
+            <button type="submit" class="secondary outline">Delete</button>
+          </form>
+        </div>
+      </footer>
+
+    <% end %>
+  </article>
+</turbo-frame>

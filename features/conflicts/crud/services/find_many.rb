@@ -3,13 +3,13 @@
 module Conflicts
   module Crud
     module Services
-      class FindByCreatorId
+      class FindMany
         extend Patterns::Service
         include Constants
 
         def call(user_id:)
           result = DB.connection.exec_params(
-            'SELECT * FROM conflicts_crud_find_by_creator_id($1)',
+            'SELECT * FROM conflicts_crud_find_many($1)',
             [user_id]
           )
 

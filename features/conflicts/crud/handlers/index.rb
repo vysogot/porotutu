@@ -7,7 +7,7 @@ module Conflicts
         extend Patterns::Service
 
         def call(current_user_id:)
-          conflicts = Services::FindByCreatorId.call(user_id: current_user_id)
+          conflicts = Services::FindMany.call(user_id: current_user_id)
 
           {
             current_user_id:,

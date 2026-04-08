@@ -6,10 +6,10 @@ module Conflicts
       class Delete
         extend Patterns::Service
 
-        def call(id:)
+        def call(id:, user_id:)
           DB.connection.exec_params(
-            'SELECT conflicts_crud_delete($1)',
-            [id]
+            'SELECT conflicts_crud_delete($1, $2)',
+            [id, user_id]
           )
 
           nil

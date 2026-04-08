@@ -1,26 +1,6 @@
-<turbo-frame id="conflict-<%= conflict.id %>">
-  <article>
-    <header>
-      <h3><%= conflict.title %></h3>
-      <% if conflict.favor %>
-        <small>Favor: <%= conflict.favor %></small>
-      <% end %>
-    </header>
-
-    <% if conflict.description && !conflict.description.empty? %>
-      <p><%= conflict.description %></p>
-    <% end %>
-
-    <% if conflict.status == 'draft' %>
-      <footer>
-        <div class="grid">
-          <a href="/conflicts/<%= conflict.id %>/edit" role="button" class="outline">Edit</a>
-          <form method="delete" action="/conflicts/<%= conflict.id %>">
-            <button type="submit" class="secondary outline">Delete</button>
-          </form>
-        </div>
-      </footer>
-
-    <% end %>
-  </article>
-</turbo-frame>
+<main class="container">
+  <nav aria-label="breadcrumb">
+    <a href="/conflicts">← Back to conflicts</a>
+  </nav>
+  <%= view :_card, layout: false, locals: { conflict: } %>
+</main>

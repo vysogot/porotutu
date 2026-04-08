@@ -3,13 +3,13 @@
 module Conflicts
   module Crud
     module Services
-      class FindById
+      class FindOne
         extend Patterns::Service
 
-        def call(id:)
+        def call(id:, user_id:)
           result = DB.connection.exec_params(
-            'SELECT * FROM conflicts_crud_find_by_id($1)',
-            [id]
+            'SELECT * FROM conflicts_crud_find_one($1, $2)',
+            [id, user_id]
           )
 
           row = result.first

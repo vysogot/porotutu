@@ -18,11 +18,11 @@ module Conflicts
       get '/conflicts/:id' do
         locals = Handlers::Show.call(params:, current_user_id: session['user_id'])
 
-        view :show_page, locals:
+        view :show, locals:
       end
 
       get '/conflicts/:id/edit' do
-        locals = Handlers::Edit.call(params:)
+        locals = Handlers::Edit.call(params:, current_user_id: session['user_id'])
 
         view :edit, locals:
       end
@@ -30,8 +30,7 @@ module Conflicts
       post '/conflicts' do
         locals = Handlers::Create.call(params:, current_user_id: session['user_id'])
 
-        content_type settings.turbo_stream
-        view :create, layout: false, locals:
+        redirect "/conflicts/#{locals[:conflict].id}", 303
       end
 
       patch '/conflicts/:id' do
@@ -42,10 +41,9 @@ module Conflicts
       end
 
       delete '/conflicts/:id' do
-        locals = Handlers::Delete.call(params:)
+        locals = Handlers::Delete.call(params:, current_user_id: session['user_id'])
 
-        content_type settings.turbo_stream
-        view :delete, layout: false, locals:
+        redirect "/conflicts", 303
       end
     end
   end
