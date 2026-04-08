@@ -1,36 +1,20 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS conflicts_crud_create(UUID, TEXT, TEXT, TEXT);
+DROP FUNCTION IF EXISTS conflicts_crud_create(UUID, TEXT, TEXT, TEXT, TEXT);
 
 CREATE FUNCTION conflicts_crud_create(
   p_creator_id UUID,
   p_title TEXT,
   p_description TEXT,
-  p_favor TEXT
+  p_favor TEXT,
+  p_status TEXT
 )
-RETURNS TABLE(
-  id UUID,
-  creator_id UUID,
-  title TEXT,
-  description TEXT,
-  favor TEXT,
-  status TEXT,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP
-) AS $$
+RETURNS SETOF conflicts AS $$
 BEGIN
   RETURN QUERY
-    INSERT INTO conflicts (creator_id, title, description, favor)
-    VALUES (p_creator_id, p_title, COALESCE(p_description, ''), p_favor)
-    RETURNING
-      conflicts.id,
-      conflicts.creator_id,
-      conflicts.title,
-      conflicts.description,
-      conflicts.favor,
-      conflicts.status::TEXT,
-      conflicts.created_at,
-      conflicts.updated_at;
+    INSERT INTO conflicts (creator_id, title, description, favor, status)
+    VALUES (p_creator_id, p_title, p_description, p_favor, p_status)
+    RETURNING *;
 END;
 $$ LANGUAGE plpgsql;
 

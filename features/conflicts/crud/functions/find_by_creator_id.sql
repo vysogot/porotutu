@@ -1,0 +1,16 @@
+BEGIN;
+
+DROP FUNCTION IF EXISTS conflicts_crud_find_by_creator_id(UUID);
+
+CREATE FUNCTION conflicts_crud_find_by_creator_id(p_user_id UUID)
+RETURNS SETOF conflicts AS $$
+BEGIN
+  RETURN QUERY
+    SELECT *
+    FROM conflicts c
+    WHERE c.creator_id = p_user_id
+    ORDER BY c.created_at DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+COMMIT;

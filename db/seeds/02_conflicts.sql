@@ -15,7 +15,7 @@ SELECT
   'Weekend plans',
   'One of us wants to stay home and rest, the other wants to go out with friends.',
   'The winner picks the next three weekends',
-  'active'
+  'draft'
 FROM users u1
 WHERE u1.email = 'one@example.com'
 LIMIT 1;
@@ -26,7 +26,7 @@ SELECT
   'Thermostat temperature',
   'We can never agree on what temperature to set the thermostat to.',
   'Loser has to wear a sweater for a month',
-  'pending'
+  'draft'
 FROM users u2
 WHERE u2.email = 'two@example.com'
 LIMIT 1;

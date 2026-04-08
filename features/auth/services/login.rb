@@ -15,7 +15,7 @@ module Auth
 
         validate!(row, params[:password])
 
-        ::Mappers::User.new(id: row['id'], email: row['email'])
+        ::Mappers::User.from_row(row.except('password_digest'))
       end
 
       private

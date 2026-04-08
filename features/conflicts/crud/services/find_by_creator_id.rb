@@ -3,12 +3,13 @@
 module Conflicts
   module Crud
     module Services
-      class Index
+      class FindByCreatorId
         extend Patterns::Service
+        include Constants
 
         def call(user_id:)
           result = DB.connection.exec_params(
-            'SELECT * FROM conflicts_crud_index($1)',
+            'SELECT * FROM conflicts_crud_find_by_creator_id($1)',
             [user_id]
           )
 
@@ -17,8 +18,7 @@ module Conflicts
           end
 
           {
-            drafts: conflicts.select { |c| c.status == 'draft' },
-            active: conflicts.select { |c| c.status == 'active' }
+            drafts: conflicts.select { |c| c.status == STATUSES[:draft] }
           }
         end
       end

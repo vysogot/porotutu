@@ -10,86 +10,115 @@ Rake::TestTask.new(:test) do |t|
 end
 
 DATABASE_URL = ENV.fetch('DATABASE_URL', 'postgres://localhost/porotutu')
-DB_DIR = File.expand_path('db', __dir__)
+DB_DIR       = File.expand_path('db', __dir__)
+ROOT_DIR     = __dir__
 
-def run_scripts_in_folder(folder)
+module Color
+  RESET  = "\e[0m"
+  BOLD   = "\e[1m"
+  RED    = "\e[31m"
+  GREEN  = "\e[32m"
+  YELLOW = "\e[33m"
+  CYAN   = "\e[36m"
+  DIM    = "\e[2m"
+
+  def self.header(text)   = "#{BOLD}#{CYAN}#{text}#{RESET}"
+  def self.success(text)  = "#{GREEN}#{text}#{RESET}"
+  def self.error(text)    = "#{RED}#{text}#{RESET}"
+  def self.skipped(text)  = "#{YELLOW}#{text}#{RESET}"
+  def self.path(text)     = "#{DIM}#{text}#{RESET}"
+  def self.label(text)    = "#{BOLD}#{text}#{RESET}"
+end
+
+def relative_path(filepath)
+  filepath.delete_prefix("#{ROOT_DIR}/")
+end
+
+def with_connection
   conn = PG.connect(DATABASE_URL)
-  path = File.join(DB_DIR, folder)
-  files = Dir["#{path}/*.sql"].sort
-
-  puts "\n--- Running scripts in '#{folder}' ---\n\n"
-
-  files.each do |filepath|
-    filename = File.basename(filepath)
-    sql = File.read(filepath)
-
-    conn.exec(sql)
-    puts "#{filename} => Success"
-  rescue PG::Error => e
-    puts "\n#{filename} => Error: #{e.message}"
-    exit 1
-  end
-
-  puts "\nCompleted #{folder}\n"
+  yield conn
 ensure
   conn&.finish
+end
+
+def run_sql_file(conn, filepath)
+  conn.exec(File.read(filepath))
+end
+
+def run_scripts_in_folder(folder)
+  files = Dir["#{File.join(DB_DIR, folder)}/*.sql"].sort
+
+  puts "\n#{Color.header("--- Running scripts in '#{folder}' ---")}\n\n"
+
+  with_connection do |conn|
+    files.each do |filepath|
+      rel = relative_path(filepath)
+      run_sql_file(conn, filepath)
+      puts "#{Color.path(rel)} #{Color.success("=> Success")}"
+    rescue PG::Error => e
+      puts "#{Color.path(rel)} #{Color.error("=> Error:")} #{e.message}"
+      exit 1
+    end
+  end
+
+  puts "\n#{Color.success("Completed #{folder}")}\n"
 end
 
 namespace :db do
   desc 'Run database migrations'
   task :migrate do
-    conn = PG.connect(DATABASE_URL)
-    path = File.join(DB_DIR, 'migrate')
-    files = Dir["#{path}/*.sql"].sort
+    files = Dir["#{File.join(DB_DIR, 'migrate')}/*.sql"].sort
 
-    puts "\n--- Running scripts in 'migrate' ---\n\n"
+    puts "\n#{Color.header("--- Running scripts in 'migrate' ---")}\n\n"
 
-    files.each do |filepath|
-      filename = File.basename(filepath)
-      version = filename.split('_').first
+    with_connection do |conn|
+      applied = conn.exec('SELECT version FROM schema_migrations').map { |r| r['version'] }.to_set
 
-      applied = conn.exec_params('SELECT 1 FROM schema_migrations WHERE version = $1', [version]).any?
+      files.each do |filepath|
+        rel     = relative_path(filepath)
+        version = File.basename(filepath).split('_').first
 
-      if applied
-        puts "#{filename} => Skipped (already applied)"
-        next
+        if applied.include?(version)
+          puts "#{Color.path(rel)} #{Color.skipped("=> Skipped (already applied)")}"
+          next
+        end
+
+        run_sql_file(conn, filepath)
+        conn.exec_params('INSERT INTO schema_migrations (version) VALUES ($1)', [version])
+        puts "#{Color.path(rel)} #{Color.success("=> Success")}"
+      rescue PG::Error => e
+        puts "#{Color.path(rel)} #{Color.error("=> Error:")} #{e.message}"
+        exit 1
       end
-
-      sql = File.read(filepath)
-      conn.exec(sql)
-      conn.exec_params('INSERT INTO schema_migrations (version) VALUES ($1)', [version])
-      puts "#{filename} => Success"
-    rescue PG::Error => e
-      puts "\n#{filename} => Error: #{e.message}"
-      exit 1
     end
 
-    puts "\nCompleted migrate\n"
-  ensure
-    conn&.finish
+    puts "\n#{Color.success("Completed migrate")}\n"
   end
 
   desc 'Load/reload all database functions'
   task :functions do
-    conn = PG.connect(DATABASE_URL)
-    files = Dir["#{File.expand_path('features', __dir__)}/**/functions/**/*.sql"].sort
+    files = Dir["#{File.expand_path('features', ROOT_DIR)}/**/functions/**/*.sql"].sort
 
-    puts "\n--- Loading functions ---\n\n"
+    puts "\n#{Color.header("--- Loading functions ---")}\n\n"
 
-    files.each do |filepath|
-      filename = filepath.delete_prefix("#{__dir__}/")
-      sql = File.read(filepath)
+    errors = []
 
-      conn.exec(sql)
-      puts "#{filename} => Success"
-    rescue PG::Error => e
-      puts "\n#{filename} => Error: #{e.message}"
-      exit 1
+    with_connection do |conn|
+      files.each do |filepath|
+        rel = relative_path(filepath)
+        run_sql_file(conn, filepath)
+        puts "#{Color.path(rel)} #{Color.success("=> Success")}"
+      rescue PG::Error => e
+        puts "#{Color.path(rel)} #{Color.error("=> Error:")} #{e.message}"
+        errors << rel
+      end
     end
 
-    puts "\nCompleted functions\n"
-  ensure
-    conn&.finish
+    if errors.empty?
+      puts "\n#{Color.success("Completed functions")}\n"
+    else
+      puts "\n#{Color.error("Completed functions with errors:")} #{errors.join(', ')}\n"
+    end
   end
 
   desc 'Seed the database'
@@ -102,23 +131,23 @@ namespace :db do
     env = ENV.fetch('APP_ENV')
 
     unless %w[development testing].include?(env)
-      puts "\nCan't run in '#{env}', do it manually or use 'rake db:migrate'\n\n"
+      puts "\n#{Color.error("Can't run in '#{env}', do it manually or use 'rake db:migrate'")}\n\n"
       exit 1
     end
 
-    conn = PG.connect(DATABASE_URL)
-    conn.exec('SET client_min_messages = WARNING')
-    conn.exec('DROP SCHEMA public CASCADE')
-    conn.exec('CREATE SCHEMA public')
-    conn.finish
+    with_connection do |conn|
+      conn.exec('SET client_min_messages = WARNING')
+      conn.exec('DROP SCHEMA public CASCADE')
+      conn.exec('CREATE SCHEMA public')
+    end
 
-    puts "\nDatabase reset (schema dropped and recreated)\n"
+    puts "\n#{Color.label("Database reset")} #{Color.success("(schema dropped and recreated)")}\n"
 
     run_scripts_in_folder('create_schema')
     Rake::Task['db:migrate'].invoke
     Rake::Task['db:functions'].invoke
     Rake::Task['db:seed'].invoke
 
-    puts "\nReset db completed\n\n"
+    puts "\n#{Color.success("Reset complete")}\n\n"
   end
 end

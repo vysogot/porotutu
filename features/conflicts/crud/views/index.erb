@@ -9,8 +9,7 @@
 </header>
 
 <main class="container">
-  <% if drafts.empty? && active.empty? %>
-
+  <% if drafts.empty? %>
     <article>
       <p>No conflicts yet. Start one to get the conversation going.</p>
     </article>
@@ -26,16 +25,4 @@
       </div>
     </section>
   <% end %>
-
-  <% unless active.empty? %>
-    <section>
-      <h2>Active conflicts</h2>
-      <div id="conflicts-active">
-        <% active.each do |conflict| %>
-          <%= view :show, layout: false, locals: { conflict: } %>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
-
 </main>

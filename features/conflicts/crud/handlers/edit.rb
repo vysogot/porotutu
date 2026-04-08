@@ -7,7 +7,7 @@ module Conflicts
         extend Patterns::Service
 
         def call(params:)
-          conflict = Services::Find.call(id: params[:id])
+          conflict = Services::FindById.call(id: params[:id])
 
           { conflict: }
         end
