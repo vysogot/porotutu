@@ -10,11 +10,11 @@
             type="text"
             id="title"
             name="title"
-            value="<%= conflict.title %>"
-            maxlength="120"
-            required
+            value="<%= defined?(params) && params[:title] ? params[:title] : conflict.title %>"
+            maxlength="100"
             autofocus
           />
+          <%= field_error(:title, errors: defined?(errors) ? errors : nil) %>
         </label>
         <label for="description">
           Describe the conflict
@@ -23,7 +23,8 @@
             name="description"
             maxlength="1000"
             rows="4"
-          ><%= conflict.description %></textarea>
+          ><%= defined?(params) && params[:description] ? params[:description] : conflict.description %></textarea>
+          <%= field_error(:description, errors: defined?(errors) ? errors : nil) %>
         </label>
         <label for="favor">
           What's the favor?
@@ -31,9 +32,10 @@
             type="text"
             id="favor"
             name="favor"
-            value="<%= conflict.favor %>"
-            maxlength="200"
+            value="<%= defined?(params) && params[:favor] ? params[:favor] : conflict.favor %>"
+            maxlength="100"
           />
+          <%= field_error(:favor, errors: defined?(errors) ? errors : nil) %>
         </label>
         <div class="grid">
           <button type="submit">Save</button>

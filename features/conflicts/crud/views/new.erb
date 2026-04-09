@@ -8,10 +8,11 @@
           id="title"
           name="title"
           placeholder="e.g. Who does the dishes"
-          maxlength="120"
-          required
+          maxlength="100"
+          value="<%= defined?(params) ? params[:title] : '' %>"
           autofocus
         />
+        <%= field_error(:title, errors: defined?(errors) ? errors : nil) %>
       </label>
       <label for="description">
         Describe the conflict
@@ -21,7 +22,8 @@
           placeholder="Give some context..."
           maxlength="1000"
           rows="4"
-        ></textarea>
+        ><%= defined?(params) ? params[:description] : '' %></textarea>
+        <%= field_error(:description, errors: defined?(errors) ? errors : nil) %>
       </label>
       <label for="favor">
         What's the favor that would settle this?
@@ -30,8 +32,10 @@
           id="favor"
           name="favor"
           placeholder="e.g. The other person cooks for a week"
-          maxlength="200"
+          maxlength="100"
+          value="<%= defined?(params) ? params[:favor] : '' %>"
         />
+        <%= field_error(:favor, errors: defined?(errors) ? errors : nil) %>
       </label>
       <div class="grid">
         <button type="submit">Create conflict</button>

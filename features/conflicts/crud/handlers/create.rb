@@ -8,7 +8,9 @@ module Conflicts
         include Constants
 
         def call(params:, current_user_id:)
-          params = params.slice(:title, :description, :favor, :status)
+          params = params.slice(:title, :description, :favor)
+
+          Validators::Conflict.call(params:)
 
           conflict = Services::Create.call(
             user_id: current_user_id,

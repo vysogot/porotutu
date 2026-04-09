@@ -31,6 +31,8 @@ module Conflicts
         locals = Handlers::Create.call(params:, current_user_id: session['user_id'])
 
         redirect "/conflicts/#{locals[:conflict].id}", 303
+      rescue Errors::ValidationError => e
+        view :new, locals: { errors: e.errors, params: }
       end
 
       patch '/conflicts/:id' do
@@ -38,6 +40,9 @@ module Conflicts
 
         content_type settings.turbo_stream
         view :update, layout: false, locals:
+      rescue Errors::ValidationError => e
+        locals = Handlers::Edit.call(params:, current_user_id: session['user_id'])
+        view :edit, locals: locals.merge(errors: e.errors, params:)
       end
 
       delete '/conflicts/:id' do

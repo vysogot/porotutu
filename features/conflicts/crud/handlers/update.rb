@@ -9,6 +9,8 @@ module Conflicts
         def call(params:, current_user_id:)
           params = params.slice(:id, :title, :description, :favor)
 
+          Validators::Conflict.call(params:)
+
           conflict = Services::Update.call(
             id: params[:id],
             title: params[:title],
