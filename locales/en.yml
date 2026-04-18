@@ -1,0 +1,16 @@
+conflicts:
+  index:
+    heading: "Couple of Conflicts"
+    subheading: "Track and resolve conflicts together."
+    new_button: "+ New conflict"
+    empty: "No conflicts yet. Start one to get the conversation going."
+    drafts_heading: "Your drafts"
+  show:
+    back: "Back to {{section}}"
+users:
+  auth:
+    login_title: "Log in"
+    invalid_credentials: "Email or password is incorrect."
+layouts:
+  main:
+    logout: "Log out as {{email}}"

@@ -18,5 +18,9 @@ module Patterns
     def csrf_field
       erb :csrf_field, views: PARTIALS_DIR, layout: false
     end
+
+    def t(key, **interpolations)
+      Patterns::Translations.t(key, **interpolations)
+    end
   end
 end

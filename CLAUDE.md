@@ -4,20 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-```bash
-bundle                        # install gems
-bundle exec rackup            # run dev server (Puma via rackup, reads .env)
-bundle exec rake test         # run all tests (tests/**/*_test.rb)
-bundle exec rake db:reset     # dev/test only: drop schema, create, migrate, load functions, seed
-bundle exec rake db:migrate   # run pending migrations from db/migrate
-bundle exec rake db:functions # reload every features/*/functions/**/*.sql
-bundle exec rake db:seed      # apply db/seeds
-bin/console                   # IRB with the full app loaded
-```
-
-`APP_ENV`, `DATABASE_URL`, and `SESSION_SECRET` must be set (see `.env`). `rake db:reset` refuses to run unless `APP_ENV` is `development` or `testing`.
-
-A single test file: `bundle exec rake test TEST=tests/path/to/file_test.rb`.
+All commands are in README.md. Follow the instructions there to set up your environment and run the app/tests. Add new ones there too.
 
 ## Architecture
 
@@ -28,28 +15,36 @@ Modular Sinatra app using Zeitwerk autoloading. Entry point is `app.rb`; `config
 
 ### Request pipeline
 `App < Sinatra::Base` mounts middleware in order:
-1. `Patterns::CsrfProtection` — rejects POST/PATCH/DELETE without a valid `csrf_token` param (skipped when `RACK_ENV=test`). Token is stored in session and emitted via the `csrf_field` helper.
-2. `Patterns::Authentication` — redirects to `/login` unless the session has `user_id`. Public paths are hard-coded in `PUBLIC_PATHS` (GET `/login`, `/register`; POST `/session`, `/users`).
-3. Feature route classes (`Auth::Routes`, `Users::Routes`, `Conflicts::Routes`) — each is its own `Sinatra::Base` subclass, mounted via `use`. Sub-feature routes (e.g. `Conflicts::Crud::Routes`) are mounted inside their parent feature's `Routes` class.
+1. `Patterns::CsrfProtection` — rejects POST/PATCH/DELETE without a valid `csrf_token` param (skipped only when `APP_ENV=test`). Token is stored in session and emitted via the `csrf_field` helper.
+2. `Patterns::Authentication` — redirects to `/login` unless the session has `user_id`. Public paths are hard-coded in `PUBLIC_PATHS` (GET `/login`, `/register`; POST `/session`, `/users`). Before redirecting, it calls `Patterns::ReturnTo.set` so a successful login can bounce the user back to where they came from.
+3. Top-level feature route classes (`Users::Routes`, `Conflicts::Routes`) — each is its own `Sinatra::Base` subclass, mounted via `use`. Sub-feature routes (`Users::Crud::Routes`, `Users::Auth::Routes`, `Conflicts::Crud::Routes`) are mounted inside their parent feature's `Routes` class.
 
 ### Feature anatomy
 A feature (or sub-feature) under `features/<name>/[<subfeature>/]` has this fixed shape:
 - `routes.rb` — Sinatra routes. Route bodies are thin: call a handler, render a view, or redirect. Validation errors from handlers are rescued here and re-rendered.
 - `handlers/*.rb` — orchestrate validators + services, slice params, and return a `locals` hash for the view. No DB calls here.
-- `services/*.rb` — one DB function call each, mapped to a `Mappers::*` Data object.
+- `services/*.rb` — `include Patterns::Query`, call a single Postgres function via `call_function('fn_name', [args])`, map the row to a `Mappers::*` Data object.
 - `validators/*.rb` — mix in `Patterns::Validations`, raise a feature-local `Errors::ValidationError` with an `errors` hash on failure.
 - `functions/*.sql` — one SQL file per named Postgres function. Loaded by `rake db:functions`. All DB access goes through these — no raw SELECT/INSERT/UPDATE/DELETE in services. See `.claude/rules/sql.md` for required file structure (BEGIN/DROP/CREATE/COMMIT; mutating functions `RETURN SETOF <table>` with `RETURNING *`).
-- `helpers/views.rb` — defines a feature-specific view helper (e.g. `view`, `auth_erb`, `users_erb`) that delegates to `Patterns::Views#feature_erb` with the feature's `VIEWS_DIR`.
+- `helpers/*.rb` — Ruby modules mixed into the `Routes` class. `views.rb` defines the feature's view helper (`view`, `auth_erb`, `users_erb`, …) delegating to `Patterns::Views#feature_erb`. Other helper files (e.g. `users/auth/helpers/session.rb` → `post_login_path`) hold flow logic that doesn't fit a handler.
 - `views/*.erb` — rendered through the feature's helper so the shared `layouts/main.erb` wraps them.
 - `errors/*.rb` — feature-local exception classes.
 
 ### Services and the call convention
 `Patterns::Service` is a one-method mixin (`extend Patterns::Service`) that makes every class callable as `Klass.call(...)` instead of `Klass.new.call(...)`. Handlers, services, and validators all use it — so everywhere you see `.call(...)` the target is a stateless object with a single `call` instance method.
 
+`Patterns::Query` is the only thing services touch the DB through. It exposes `call_function(name, args = [])` which expands to `SELECT * FROM name($1..$N)` and runs inside a `DB.with` checkout. Never call `DB.with` or `conn.exec_params` directly in a service.
+
 ### Data layer
-- Single `PG` connection via `DB.connection` (memoized in `patterns/db.rb`).
-- No ORM. Query results become `Mappers::*` objects, defined with `Data.define` plus a `from_row(row)` class method that reads hash keys from the `PG::Result` row (strings, not symbols).
-- Mutating SQL functions must return the affected row; services do `Mappers::X.from_row(result.first)` so callers always get the updated model.
+- `patterns/db.rb` holds a `connection_pool`-backed pool; `DB.with { |c| ... }` checks out a connection (nested `with` calls on the same thread reuse the same connection, which is what makes test transactions work).
+- `PG::BasicTypeMapForResults` is set on every connection when it's created, so `TIMESTAMP` columns come back as `Time` objects, booleans as booleans, etc. UUIDs stay as strings (intentional — the basic type map emits a harmless warning about UUID on first use).
+- No ORM. Query results become `Mappers::*` objects, defined with `Data.define` plus a `from_row(row)` class method that reads hash keys from the `PG::Result` row (strings, not symbols). `Mappers::User` deliberately does **not** carry `password_digest` — auth services pull it off the raw row before mapping.
+- Mutating SQL functions must return the affected row (`RETURNS SETOF <table>`, `RETURNING *`) so services always return an up-to-date `Mappers::*` object. This applies to `DELETE` too.
+
+### Tests
+- `tests/test_helper.rb` builds its own Zeitwerk loader (ignoring `app.rb` and `patterns/db.rb`) and defines `Tests::TestCase` as the base class.
+- `setup` checks out a pool connection and opens a transaction; `teardown` rolls back and checks the connection back in. Anything the service under test does via `DB.with` inside reuses the same connection (`connection_pool` pins per-thread), so the ROLLBACK wipes it.
+- Use `APP_ENV=test bundle exec rake test` so CSRF is bypassed for any request-level tests.
 
 ### Views
 - `Patterns::Views#feature_erb(views_dir, view, **opts)` renders with `layout: :main` from `layouts/` unless overridden.
