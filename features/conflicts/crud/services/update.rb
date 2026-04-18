@@ -10,7 +10,10 @@ module Conflicts
         def call(id:, title:, description:, favor:)
           result = call_function(
             'conflicts_crud_update',
-            [id, title, description, favor]
+            p_id: id,
+            p_title: title,
+            p_description: description,
+            p_favor: favor
           )
 
           Mappers::Conflict.from_row(result.first)

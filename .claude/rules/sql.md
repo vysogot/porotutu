@@ -39,6 +39,30 @@ result.map { |row| Conflict.new(id: row['id'], name: row['name']) }
 
 All queries must go through a named SQL function. Never write raw `SELECT/INSERT/UPDATE/DELETE` directly in a service. Functions live in `features/<name>/functions/` and are loaded via `rake db:functions`.
 
+## Calling functions from services
+
+Services call SQL functions via `Patterns::Query#call_function`, which accepts a function name and a keyword hash of `p_*` arguments. The keys must match the SQL function's parameter names exactly — Postgres validates them and fails loudly on typos. Never pass a positional array.
+
+```ruby
+# GOOD
+call_function(
+  'conflicts_crud_create',
+  p_creator_id: user_id,
+  p_title: title,
+  p_description: description,
+  p_favor: favor,
+  p_status: status
+)
+
+# BAD — positional array, no name validation
+call_function(
+  'conflicts_crud_create',
+  [user_id, title, description, favor, status]
+)
+```
+
+Don't align keys and values with extra spaces.
+
 ## Function file structure
 
 Every SQL function file must wrap its contents in a transaction, drop the existing function first, then create it fresh. Use `CREATE` not `CREATE OR REPLACE` — the DROP makes OR REPLACE redundant, and OR REPLACE silently ignores return type changes instead of failing loudly.

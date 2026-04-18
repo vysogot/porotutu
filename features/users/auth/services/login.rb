@@ -8,7 +8,7 @@ module Users
         include Patterns::Query
 
         def call(params:)
-          result = call_function('find_user_by_email', [params[:email]])
+          result = call_function('find_user_by_email', p_email: params[:email])
           row = result.first
 
           validate!(row, params[:password])

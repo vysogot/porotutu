@@ -8,7 +8,7 @@ module Conflicts
         include Patterns::Query
 
         def call(id:, user_id:)
-          result = call_function('conflicts_crud_delete', [id, user_id])
+          result = call_function('conflicts_crud_delete', p_id: id, p_user_id: user_id)
           row = result.first
 
           row && Mappers::Conflict.from_row(row)

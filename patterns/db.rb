@@ -9,7 +9,9 @@ module DB
   def self.pool
     @pool ||= ConnectionPool.new(size: POOL_SIZE, timeout: POOL_TIMEOUT) do
       conn = PG.connect(ENV.fetch('DATABASE_URL'))
-      conn.type_map_for_results = PG::BasicTypeMapForResults.new(conn)
+      type_map = PG::BasicTypeMapForResults.new(conn)
+      type_map.add_coder(PG::TextDecoder::String.new(name: 'uuid', oid: 2950))
+      conn.type_map_for_results = type_map
       conn
     end
   end

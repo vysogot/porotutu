@@ -10,7 +10,11 @@ module Conflicts
         def call(user_id:, title:, description:, favor:, status:)
           result = call_function(
             'conflicts_crud_create',
-            [user_id, title, description, favor, status]
+            p_creator_id: user_id,
+            p_title: title,
+            p_description: description,
+            p_favor: favor,
+            p_status: status
           )
 
           Mappers::Conflict.from_row(result.first)

@@ -12,7 +12,8 @@ module Users
 
           result = call_function(
             'create_user',
-            [params[:email], password_digest]
+            p_email: params[:email],
+            p_password_digest: password_digest
           )
 
           ::Mappers::User.from_row(result.first)

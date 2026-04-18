@@ -37,7 +37,7 @@ A feature (or sub-feature) under `features/<name>/[<subfeature>/]` has this fixe
 
 ### Data layer
 - `patterns/db.rb` holds a `connection_pool`-backed pool; `DB.with { |c| ... }` checks out a connection (nested `with` calls on the same thread reuse the same connection, which is what makes test transactions work).
-- `PG::BasicTypeMapForResults` is set on every connection when it's created, so `TIMESTAMP` columns come back as `Time` objects, booleans as booleans, etc. UUIDs stay as strings (intentional — the basic type map emits a harmless warning about UUID on first use).
+- `PG::BasicTypeMapForResults` is set on every connection when it's created, so `TIMESTAMP` columns come back as `Time` objects, booleans as booleans, etc. UUIDs stay as strings, registered explicitly via `PG::TextDecoder::String` for oid 2950 to silence the default "no type cast defined" warning.
 - No ORM. Query results become `Mappers::*` objects, defined with `Data.define` plus a `from_row(row)` class method that reads hash keys from the `PG::Result` row (strings, not symbols). `Mappers::User` deliberately does **not** carry `password_digest` — auth services pull it off the raw row before mapping.
 - Mutating SQL functions must return the affected row (`RETURNS SETOF <table>`, `RETURNING *`) so services always return an up-to-date `Mappers::*` object. This applies to `DELETE` too.
 

@@ -8,7 +8,7 @@ module Conflicts
         include Patterns::Query
 
         def call(user_id:)
-          result = call_function('conflicts_crud_find_many', [user_id])
+          result = call_function('conflicts_crud_find_many', p_user_id: user_id)
 
           conflicts = result.map do |row|
             Mappers::Conflict.from_row(row)
