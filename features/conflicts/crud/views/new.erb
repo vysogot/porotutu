@@ -1,14 +1,14 @@
 <main class="container" id="new_conflict_frame">
-  <h2>New conflict</h2>
+  <h2><%= t('conflicts.crud.new.title') %></h2>
   <form action="/conflicts" method="post">
       <%= csrf_field %>
       <label for="title">
-        What's it about?
+        <%= t('conflicts.crud.new.title_label') %>
         <input
           type="text"
           id="title"
           name="title"
-          placeholder="e.g. Who does the dishes"
+          placeholder="<%= t('conflicts.crud.new.title_placeholder') %>"
           maxlength="100"
           value="<%= defined?(params) ? params[:title] : '' %>"
           autofocus
@@ -16,31 +16,31 @@
         <%= field_error(:title, errors: defined?(errors) ? errors : nil) %>
       </label>
       <label for="description">
-        Describe the conflict
+        <%= t('conflicts.crud.new.description_label') %>
         <textarea
           id="description"
           name="description"
-          placeholder="Give some context..."
+          placeholder="<%= t('conflicts.crud.new.description_placeholder') %>"
           maxlength="1000"
           rows="4"
         ><%= defined?(params) ? params[:description] : '' %></textarea>
         <%= field_error(:description, errors: defined?(errors) ? errors : nil) %>
       </label>
       <label for="favor">
-        What's the favor that would settle this?
+        <%= t('conflicts.crud.new.favor_label') %>
         <input
           type="text"
           id="favor"
           name="favor"
-          placeholder="e.g. The other person cooks for a week"
+          placeholder="<%= t('conflicts.crud.new.favor_placeholder') %>"
           maxlength="100"
           value="<%= defined?(params) ? params[:favor] : '' %>"
         />
         <%= field_error(:favor, errors: defined?(errors) ? errors : nil) %>
       </label>
       <div class="grid">
-        <button type="submit">Create conflict</button>
-        <a href="/conflicts" role="button" class="secondary outline">Cancel</a>
+        <button type="submit"><%= t('conflicts.crud.new.submit_button') %></button>
+        <a href="/conflicts" role="button" class="secondary outline"><%= t('conflicts.crud.new.cancel_button') %></a>
       </div>
   </form>
 </main>

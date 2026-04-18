@@ -1,6 +1,6 @@
 <main class="container">
   <nav aria-label="breadcrumb">
-    <a href="/conflicts">← Back to conflicts</a>
+    <a href="/conflicts"><%= t('conflicts.crud.show.back') %></a>
   </nav>
   <%= view :_card, layout: false, locals: { conflict: } %>
 </main>

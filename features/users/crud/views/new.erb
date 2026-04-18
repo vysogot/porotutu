@@ -1,18 +1,18 @@
 <main class="container">
   <article>
-    <h2>Register</h2>
+    <h2><%= t('users.crud.new.heading') %></h2>
     <form action="/users" method="post" data-turbo="false">
       <%= csrf_field %>
       <label>
-        Email
+        <%= t('users.crud.new.email_label') %>
         <input type="email" name="email" required/>
       </label>
       <label>
-        Password
+        <%= t('users.crud.new.password_label') %>
         <input type="password" name="password" required/>
       </label>
-      <button type="submit">Register</button>
+      <button type="submit"><%= t('users.crud.new.submit_button') %></button>
     </form>
-    <p><a href="/login">Already have an account?</a></p>
+    <p><a href="/login"><%= t('users.crud.new.login_link') %></a></p>
   </article>
 </main>

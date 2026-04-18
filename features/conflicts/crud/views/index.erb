@@ -1,23 +1,23 @@
 <main class="container" id="conflicts-container">
   <header class="container">
     <hgroup>
-      <h1>Couple of Conflicts</h1>
-      <p>Track and resolve conflicts together.</p>
+      <h1><%= t('conflicts.crud.index.heading') %></h1>
+      <p><%= t('conflicts.crud.index.subheading') %></p>
       <nav>
-        <a href="/conflicts/new" role="button" class="outline">+ New conflict</a>
+        <a href="/conflicts/new" role="button" class="outline"><%= t('conflicts.crud.index.new_button') %></a>
       </nav>
     </hgroup>
   </header>
 
   <% if drafts.empty? %>
     <article>
-      <p>No conflicts yet. Start one to get the conversation going.</p>
+      <p><%= t('conflicts.crud.index.empty') %></p>
     </article>
   <% end %>
 
   <% unless drafts.empty? %>
     <section id="conflicts-drafts-section">
-      <h2>Your drafts</h2>
+      <h2><%= t('conflicts.crud.index.drafts_heading') %></h2>
       <div id="conflicts-drafts">
         <% drafts.each do |conflict| %>
           <%= view :_card, layout: false, locals: { conflict: } %>

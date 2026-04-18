@@ -1,21 +1,21 @@
 <main class="container">
   <article>
-    <h2>Login</h2>
+    <h2><%= t('users.auth.new.heading') %></h2>
     <% if error %>
       <p><%= error %></p>
     <% end %>
     <form action="/session" method="post" data-turbo="false">
       <%= csrf_field %>
       <label>
-        Email
+        <%= t('users.auth.new.email_label') %>
         <input type="email" name="email" required/>
       </label>
       <label>
-        Password
+        <%= t('users.auth.new.password_label') %>
         <input type="password" name="password" required/>
       </label>
-      <button type="submit">Login</button>
+      <button type="submit"><%= t('users.auth.new.submit_button') %></button>
     </form>
-    <p><a href="/register">Create an account</a></p>
+    <p><a href="/register"><%= t('users.auth.new.register_link') %></a></p>
   </article>
 </main>

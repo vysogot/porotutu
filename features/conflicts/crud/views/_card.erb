@@ -3,7 +3,7 @@
     <header>
       <h3><a href="/conflicts/<%= conflict.id %>" data-turbo-frame="_top"><%= conflict.title %></a></h3>
       <% if conflict.favor %>
-        <small>Favor: <%= conflict.favor %></small>
+        <small><%= t('conflicts.crud.card.favor_label', favor: conflict.favor) %></small>
       <% end %>
     </header>
 
@@ -14,10 +14,10 @@
     <% if conflict.status == 'draft' %>
       <footer>
         <div class="grid">
-          <a href="/conflicts/<%= conflict.id %>/edit" role="button" class="outline">Edit</a>
+          <a href="/conflicts/<%= conflict.id %>/edit" role="button" class="outline"><%= t('conflicts.crud.card.edit_button') %></a>
           <form method="delete" action="/conflicts/<%= conflict.id %>" data-turbo-frame="_top">
             <%= csrf_field %>
-            <button type="submit" class="secondary outline">Delete</button>
+            <button type="submit" class="secondary outline"><%= t('conflicts.crud.card.delete_button') %></button>
           </form>
         </div>
       </footer>

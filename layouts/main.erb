@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content="A place to build your conflicts. Good conflicts."/>
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.ico">
-    <title><%= @title || 'Porotutu' %></title>
+    <title><%= @title || t('layouts.main.default_title') %></title>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"
@@ -17,13 +17,13 @@
   <body>
     <nav class="container">
       <ul>
-        <li><a href="/conflicts">Conflicts</a></li>
+        <li><a href="/conflicts"><%= t('layouts.main.nav_conflicts') %></a></li>
       </ul>
       <ul>
         <li>
           <form action="/logout" method="post" data-turbo="false">
             <%= csrf_field %>
-            <button type="submit" class="outline">Logout</button>
+            <button type="submit" class="outline"><%= t('layouts.main.logout_button') %></button>
           </form>
         </li>
       </ul>
