@@ -25,12 +25,12 @@ If `mise` itself isn't on PATH, it's at `/opt/homebrew/bin/mise`.
 Modular Sinatra app using Zeitwerk autoloading. Entry point is `app.rb`; `config.ru` loads dotenv first then the app.
 
 ### Top-level namespace
-All autoloaded code lives under `module Porotutu` to avoid collisions with gem-defined constants (`Color`, `App`, `Patterns`, etc.). Every file under `features/`, `patterns/`, `mappers/`, `lib/env_helpers.rb`, and `tests/` is wrapped — so a class like `Porotutu::Users::Crud::Services::Create` is the full constant path. Inside that nesting, bare references like `Patterns::Service` resolve via Ruby's outward lookup (it walks up to `Porotutu`, finds `Porotutu::Patterns`). Sibling lookup does **not** descend automatically — `extend Service` from inside `Porotutu::Users::…` won't find `Porotutu::Patterns::Service`; always write `extend Patterns::Service`.
+All autoloaded code lives under `module Porotutu` to avoid collisions with gem-defined constants (`Color`, `App`, `Patterns`, etc.). Every file under `features/`, `patterns/`, and `tests/` is wrapped — so a class like `Porotutu::Users::Crud::Services::Create` is the full constant path. Inside that nesting, bare references like `Patterns::Service` resolve via Ruby's outward lookup (it walks up to `Porotutu`, finds `Porotutu::Patterns`). Sibling lookup does **not** descend automatically — `extend Service` from inside `Porotutu::Users::…` won't find `Porotutu::Patterns::Service`; always write `extend Patterns::Service`.
 
 `bin/wrap_in_porotutu.rb` is an idempotent script that wraps any unwrapped Ruby files in the project — useful when adding new code from elsewhere.
 
 ### Zeitwerk layout
-`app.rb` calls `loader.push_dir(__dir__, namespace: Porotutu)` and collapses `features/` — so `features/conflicts/crud/services/create.rb` resolves to `Porotutu::Conflicts::Crud::Services::Create`. When adding a new feature directory, the `features/<name>/` layer is collapsed away but every deeper directory becomes part of the module path. Non-autoloaded trees are explicitly ignored: `app.rb`, `bin/`, `lib/`, `tests/`, `db/`, `ksiaki/`, `public/`, `layouts/`, `partials/`, `locales/`. The same loader config is mirrored in `tests/test_helper.rb`.
+`app.rb` calls `loader.push_dir(__dir__, namespace: Porotutu)` and collapses `features/` — so `features/conflicts/crud/services/create.rb` resolves to `Porotutu::Conflicts::Crud::Services::Create`. When adding a new feature directory, the `features/<name>/` layer is collapsed away but every deeper directory becomes part of the module path. Non-autoloaded trees are explicitly ignored: `app.rb`, `bin/`, `tasks/`, `tests/`, `db/`, `ksiaki/`, `public/`, `layouts/`, `partials/`, `locales/`. The same loader config is mirrored in `tests/test_helper.rb`.
 
 ### Request pipeline
 `Porotutu::App < Sinatra::Base` mounts middleware in order:
@@ -42,12 +42,13 @@ All autoloaded code lives under `module Porotutu` to avoid collisions with gem-d
 A feature (or sub-feature) under `features/<name>/[<subfeature>/]` has this fixed shape:
 - `routes.rb` — Sinatra routes. Route bodies are thin: call a handler, render a view, or redirect. Validation errors from handlers are rescued here and re-rendered.
 - `handlers/*.rb` — orchestrate validators + services, slice params, and return a `locals` hash for the view. No DB calls here.
-- `services/*.rb` — `include Patterns::Query`, call a single Postgres function via `call_function('fn_name', [args])`, map the row to a `Mappers::*` Data object.
+- `services/*.rb` — `include Patterns::Query`, call a single Postgres function via `call_function('fn_name', [args])`, map the row to a `Mappers::*` Data object (defined in the feature's own `mappers/` folder).
 - `validators/*.rb` — mix in `Patterns::Validations`, raise a feature-local `Errors::ValidationError` with an `errors` hash on failure.
 - `functions/*.sql` — one SQL file per named Postgres function. Loaded by `rake db:functions`. All DB access goes through these — no raw SELECT/INSERT/UPDATE/DELETE in services. See `.claude/rules/sql.md` for required file structure (BEGIN/DROP/CREATE/COMMIT; mutating functions `RETURN SETOF <table>` with `RETURNING *`).
 - `helpers/*.rb` — Ruby modules mixed into the `Routes` class. `views.rb` defines the feature's view helper (`view`, `auth_erb`, `users_erb`, …) delegating to `Patterns::Views#feature_erb`. Other helper files (e.g. `users/auth/helpers/session.rb` → `post_login_path`) hold flow logic that doesn't fit a handler.
 - `views/*.erb` — rendered through the feature's helper so the shared `layouts/main.erb` wraps them.
 - `errors/*.rb` — feature-local exception classes.
+- `mappers/*.rb` — `Data.define` read-models for rows returned by this feature's SQL functions. Namespaced under the feature (e.g. `Porotutu::Users::Mappers::User`). Cross-feature references use the fully qualified path.
 
 ### Services and the call convention
 `Patterns::Service` is a one-method mixin (`extend Patterns::Service`) that makes every class callable as `Klass.call(...)` instead of `Klass.new.call(...)`. Handlers, services, and validators all use it — so everywhere you see `.call(...)` the target is a stateless object with a single `call` instance method.
@@ -64,6 +65,7 @@ A feature (or sub-feature) under `features/<name>/[<subfeature>/]` has this fixe
 - `tests/test_helper.rb` builds its own Zeitwerk loader rooted at the project root and defines `Porotutu::Tests::TestCase` as the base class. Test files are wrapped in `module Porotutu` and inherit from `Tests::TestCase`.
 - `setup` checks out a pool connection and opens a transaction; `teardown` rolls back and checks the connection back in. Anything the service under test does via `Patterns::Db.with` inside reuses the same connection (`connection_pool` pins per-thread), so the ROLLBACK wipes it.
 - Use `APP_ENV=test bundle exec rake test` so CSRF is bypassed for any request-level tests.
+- TODO: no tests exist yet for the `conflicts` feature — only `users/auth` and `users/crud` are covered. Add them when touching conflicts code.
 
 ### Views
 - `Patterns::Views#feature_erb(views_dir, view, **opts)` renders with `layout: :main` from `layouts/` unless overridden.
@@ -75,7 +77,7 @@ A feature (or sub-feature) under `features/<name>/[<subfeature>/]` has this fixe
 `Sinatra::Reloader` is registered inside `configure :development` in `app.rb` and reloads `patterns/**`, `features/**`, and `mappers/**`. Reloader only works on modular apps when registered inside the class body (see `.claude/rules/sinatra.md`).
 
 ### Rake tasks
-Rake tasks live in `lib/tasks/db.rake` and delegate to service classes under `Porotutu::Tasks::Db` (`Migrate`, `Functions`, `Seed`, `Reset`). Each is a `Patterns::Service` callable broken into small private methods. Shared helpers live under `Porotutu::Tasks::Support` — `Runner` (DB connection, file execution, logging) and `Color` (ANSI colors). The rake tree is **not** autoloaded by Zeitwerk; `db.rake` brings in dependencies via `require_relative` (`patterns/service`, `patterns/db`, `support/runner`, `support/color`, the four task services).
+Rake tasks live in `tasks/db.rake` and delegate to service classes under `Porotutu::Tasks::Db` (`Migrate`, `Functions`, `Seed`, `Reset`). Each is a `Patterns::Service` callable broken into small private methods. Shared helpers live under `Porotutu::Tasks::Support` — `Runner` (DB connection, file execution, logging) and `Color` (ANSI colors). The rake tree is **not** autoloaded by Zeitwerk; `db.rake` brings in dependencies via `require_relative` (`patterns/service`, `patterns/db`, `patterns/env_helpers`, `support/runner`, `support/color`, the four task services).
 
 `Runner#with_connection` uses `Patterns::Db.with` (same connection pool as the app), so rake tasks share the production DB pool config and don't need a separate `DATABASE_URL` constant.
 

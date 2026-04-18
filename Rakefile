@@ -8,4 +8,4 @@ Rake::TestTask.new(:test) do |t|
   t.pattern = 'tests/**/*_test.rb'
 end
 
-Rake.add_rakelib 'lib/tasks'
+Rake.add_rakelib 'tasks'

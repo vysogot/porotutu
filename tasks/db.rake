@@ -3,15 +3,15 @@
 require 'pg'
 require_relative 'support/runner'
 require_relative 'support/color'
-require_relative '../env_helpers'
-require_relative '../../patterns/service'
-require_relative '../../patterns/db'
+require_relative '../patterns/env_helpers'
+require_relative '../patterns/service'
+require_relative '../patterns/db'
 require_relative 'db/migrate'
 require_relative 'db/functions'
 require_relative 'db/seed'
 require_relative 'db/reset'
 
-ROOT_DIR = File.expand_path('../..', __dir__)
+ROOT_DIR = File.expand_path('..', __dir__)
 DB_DIR = File.join(ROOT_DIR, 'db')
 
 namespace :db do

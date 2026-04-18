@@ -15,7 +15,7 @@ loader.collapse("#{__dir__}/features")
 loader.ignore(
   "#{__dir__}/app.rb",
   "#{__dir__}/bin",
-  "#{__dir__}/lib",
+  "#{__dir__}/tasks",
   "#{__dir__}/tests",
   "#{__dir__}/db",
   "#{__dir__}/ksiaki",
@@ -38,7 +38,6 @@ module Porotutu # rubocop:disable Style/OneClassPerFile
       register Sinatra::Reloader
       also_reload File.join(__dir__, 'patterns/**/*.rb')
       also_reload File.join(__dir__, 'features/**/*.rb')
-      also_reload File.join(__dir__, 'mappers/**/*.rb')
     end
 
     set :public_folder, File.join(__dir__, 'public')

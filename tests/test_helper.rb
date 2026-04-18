@@ -16,7 +16,7 @@ loader.collapse("#{root}/features")
 loader.ignore(
   "#{root}/app.rb",
   "#{root}/bin",
-  "#{root}/lib",
+  "#{root}/tasks",
   "#{root}/db",
   "#{root}/ksiaki",
   "#{root}/public",

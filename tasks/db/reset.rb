@@ -21,7 +21,7 @@ module Porotutu
         end
 
         def guard_environment!
-          return unless EnvHelpers.public?
+          return unless Patterns::EnvHelpers.public?
 
           warn "\n#{Support::Color.error("Refusing to reset in '#{ENV.fetch('APP_ENV')}'")}\n\n"
           exit 1
