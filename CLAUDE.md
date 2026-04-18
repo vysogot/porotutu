@@ -6,6 +6,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 All commands are in README.md. Follow the instructions there to set up your environment and run the app/tests. Add new ones there too.
 
+### Running Ruby / Bundler
+
+Ruby is managed by **mise** (see `.tool-versions`, pinned to 4.0.1). The system `/usr/bin/ruby` is 2.6 and will fail with bundler errors — do not use it, and do not go hunting through `~/.rbenv`, `~/.asdf`, `/opt/homebrew`, etc. to find a Ruby.
+
+Always prefix commands with `mise exec --`:
+
+```bash
+mise exec -- bundle exec rake test
+mise exec -- bundle exec rake db:migrate
+mise exec -- bundle exec rackup
+```
+
+If `mise` itself isn't on PATH, it's at `/opt/homebrew/bin/mise`.
+
 ## Architecture
 
 Modular Sinatra app using Zeitwerk autoloading. Entry point is `app.rb`; `config.ru` loads dotenv first then the app.
@@ -58,6 +72,7 @@ A feature (or sub-feature) under `features/<name>/[<subfeature>/]` has this fixe
 ## Project rules (must follow)
 
 These live in `.claude/rules/` and are part of the spec:
+- `.claude/rules/style.md` — no whitespace alignment on `=`, hashes, or method bodies.
 - `.claude/rules/sql.md` — SQL string on its own line inside `exec`/`exec_params`; blank line after; `do...end` for mapping; every query goes through a named SQL function with the prescribed file structure.
 - `.claude/rules/sinatra.md` — modular-app reloader placement.
 - `.claude/rules/turbo.md` — `data-turbo="false"` on auth forms; `layout: false` when composing templates; `303` redirects after Turbo form submissions.
