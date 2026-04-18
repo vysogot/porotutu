@@ -8,8 +8,8 @@ module Conflicts
 
         VIEWS_DIR = File.expand_path('../views', __dir__)
 
-        def view(view_name, **options)
-          feature_erb(VIEWS_DIR, view_name, **options)
+        def view(view_name, **)
+          feature_erb(VIEWS_DIR, view_name, **)
         end
       end
     end

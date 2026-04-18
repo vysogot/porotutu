@@ -3,7 +3,7 @@
 module Patterns
   class Authentication
     PUBLIC_PATHS = {
-      'GET'  => %w[/login /register],
+      'GET' => %w[/login /register],
       'POST' => %w[/session /users]
     }.freeze
 

@@ -13,11 +13,13 @@ loader.collapse("#{__dir__}/features")
 loader.ignore("#{__dir__}/app.rb")
 loader.setup
 
-class Sinatra::Base
-  set :turbo_stream, 'text/vnd.turbo-stream.html'
+module Sinatra
+  class Base
+    set :turbo_stream, 'text/vnd.turbo-stream.html'
+  end
 end
 
-class App < Sinatra::Base
+class App < Sinatra::Base # rubocop:disable Style/OneClassPerFile
   configure :development do
     register Sinatra::Reloader
     also_reload File.join(__dir__, 'patterns/**/*.rb')

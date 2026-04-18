@@ -6,7 +6,7 @@ module Conflicts
       class Update
         extend Patterns::Service
 
-        def call(params:, current_user_id:)
+        def call(params:)
           params = params.slice(:id, :title, :description, :favor)
 
           Validators::Conflict.call(params:)

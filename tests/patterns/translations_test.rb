@@ -5,32 +5,24 @@ require 'tempfile'
 
 module Patterns
   class TranslationsTest < Minitest::Test
+    FIXTURE_YAML = <<~YAML
+      greeting: "Hello"
+      nested:
+        deep:
+          key: "Deep value"
+      with_one: "Hi {{name}}"
+      with_many: "{{greeting}}, {{name}}!"
+    YAML
+
     def setup
       @original_locales_path = Patterns::Translations::LOCALES_PATH
-
-      @tmp = Tempfile.new(['translations', '.yml'])
-      @tmp.write(<<~YAML)
-        greeting: "Hello"
-        nested:
-          deep:
-            key: "Deep value"
-        with_one: "Hi {{name}}"
-        with_many: "{{greeting}}, {{name}}!"
-      YAML
-      @tmp.flush
-
-      with_silenced_warnings do
-        Patterns::Translations.const_set(:LOCALES_PATH, @tmp.path)
-      end
-
+      @tmp = write_fixture_yaml
+      swap_locales_path(@tmp.path)
       reset_memoization
     end
 
     def teardown
-      with_silenced_warnings do
-        Patterns::Translations.const_set(:LOCALES_PATH, @original_locales_path)
-      end
-
+      swap_locales_path(@original_locales_path)
       reset_memoization
       @tmp.close!
     end
@@ -73,6 +65,19 @@ module Patterns
     end
 
     private
+
+    def write_fixture_yaml
+      tmp = Tempfile.new(['translations', '.yml'])
+      tmp.write(FIXTURE_YAML)
+      tmp.flush
+      tmp
+    end
+
+    def swap_locales_path(path)
+      with_silenced_warnings do
+        Patterns::Translations.const_set(:LOCALES_PATH, path)
+      end
+    end
 
     def reset_memoization
       Patterns::Translations.instance_variable_set(:@translations, nil)

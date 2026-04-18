@@ -1,5 +1,12 @@
+plugins:
+  - rubocop-minitest
+  - rubocop-rake
+
 AllCops:
   NewCops: enable
 
 Style/Documentation:
   Enabled: false
+
+Minitest/MultipleAssertions:
+  Max: 5

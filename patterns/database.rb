@@ -17,8 +17,8 @@ module Patterns
       end
     end
 
-    def self.with(&block)
-      pool.with(&block)
+    def self.with(&)
+      pool.with(&)
     end
   end
 end

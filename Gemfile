@@ -4,17 +4,25 @@ source 'https://rubygems.org'
 
 ruby '4.0.1'
 
+gem 'bcrypt'
 gem 'connection_pool'
 gem 'debug'
 gem 'dotenv'
-gem 'erb-formatter'
 gem 'pg'
 gem 'puma'
 gem 'rackup'
 gem 'rake'
-gem 'zeitwerk'
-gem 'rubocop'
-gem 'bcrypt'
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'minitest'
+gem 'zeitwerk'
+
+group :development do
+  gem 'erb-formatter'
+  gem 'rubocop'
+  gem 'rubocop-minitest'
+  gem 'rubocop-rake'
+end
+
+group :test do
+  gem 'minitest'
+end

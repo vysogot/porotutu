@@ -8,8 +8,8 @@ module Users
 
         VIEWS_DIR = File.expand_path('../views', __dir__)
 
-        def users_erb(view, **options)
-          feature_erb(VIEWS_DIR, view, **options)
+        def users_erb(view, **)
+          feature_erb(VIEWS_DIR, view, **)
         end
       end
     end

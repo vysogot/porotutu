@@ -36,7 +36,7 @@ module Conflicts
       end
 
       patch '/conflicts/:id' do
-        locals = Handlers::Update.call(params:, current_user_id: session['user_id'])
+        locals = Handlers::Update.call(params:)
 
         content_type settings.turbo_stream
         view :update, layout: false, locals:
@@ -46,9 +46,9 @@ module Conflicts
       end
 
       delete '/conflicts/:id' do
-        locals = Handlers::Delete.call(params:, current_user_id: session['user_id'])
+        Handlers::Delete.call(params:, current_user_id: session['user_id'])
 
-        redirect "/conflicts", 303
+        redirect '/conflicts', 303
       end
     end
   end
