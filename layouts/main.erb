@@ -22,6 +22,7 @@
       <ul>
         <li>
           <form action="/logout" method="post" data-turbo="false">
+            <%= csrf_field %>
             <button type="submit" class="outline">Logout</button>
           </form>
         </li>

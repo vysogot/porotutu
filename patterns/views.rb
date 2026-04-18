@@ -14,5 +14,9 @@ module Patterns
     def field_error(field, errors: nil)
       erb :field_error, views: PARTIALS_DIR, layout: false, locals: { field:, errors: }
     end
+
+    def csrf_field
+      erb :csrf_field, views: PARTIALS_DIR, layout: false
+    end
   end
 end

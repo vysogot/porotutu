@@ -1,6 +1,7 @@
 <main class="container" id="new_conflict_frame">
   <h2>New conflict</h2>
   <form action="/conflicts" method="post">
+      <%= csrf_field %>
       <label for="title">
         What's it about?
         <input

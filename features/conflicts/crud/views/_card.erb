@@ -16,6 +16,7 @@
         <div class="grid">
           <a href="/conflicts/<%= conflict.id %>/edit" role="button" class="outline">Edit</a>
           <form method="delete" action="/conflicts/<%= conflict.id %>" data-turbo-frame="_top">
+            <%= csrf_field %>
             <button type="submit" class="secondary outline">Delete</button>
           </form>
         </div>

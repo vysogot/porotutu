@@ -36,6 +36,7 @@ class App < Sinatra::Base
   set :session_secret, ENV.fetch('SESSION_SECRET')
   set :sessions, key: 'porotutu.session', httponly: true, same_site: :lax
 
+  use Patterns::CsrfProtection
   use Patterns::Authentication
 
   use Auth::Routes

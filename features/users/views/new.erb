@@ -2,6 +2,7 @@
   <article>
     <h2>Register</h2>
     <form action="/users" method="post" data-turbo="false">
+      <%= csrf_field %>
       <label>
         Email
         <input type="email" name="email" required/>

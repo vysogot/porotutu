@@ -4,6 +4,7 @@
       <header><h3>Edit conflict</h3></header>
       <form method="patch" action="/conflicts/<%= conflict.id %>">
         <input type="hidden" name="_method" value="patch"/>
+        <%= csrf_field %>
         <label for="title">
           What's it about?
           <input
