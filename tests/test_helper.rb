@@ -6,28 +6,24 @@ require 'pg'
 require 'bcrypt'
 require 'zeitwerk'
 
-require_relative '../patterns/db'
+root = File.expand_path('..', __dir__)
 
 loader = Zeitwerk::Loader.new
-loader.push_dir(File.expand_path('..', __dir__))
-loader.collapse(File.expand_path('../features', __dir__))
-loader.ignore(
-  File.expand_path('../app.rb', __dir__),
-  File.expand_path('../patterns/db.rb', __dir__),
-  __dir__
-)
+loader.push_dir(root)
+loader.collapse("#{root}/features")
+loader.ignore("#{root}/app.rb", __dir__)
 loader.setup
 
 module Tests
   class TestCase < Minitest::Test
     def setup
-      @_db_conn = DB.pool.checkout
+      @_db_conn = Patterns::Database.pool.checkout
       @_db_conn.exec('BEGIN')
     end
 
     def teardown
       @_db_conn.exec('ROLLBACK')
-      DB.pool.checkin
+      Patterns::Database.pool.checkin
     end
   end
 end

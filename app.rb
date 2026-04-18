@@ -7,16 +7,10 @@ require 'bcrypt'
 require 'pg'
 require 'debug'
 
-require_relative 'patterns/db'
-
 loader = Zeitwerk::Loader.new
 loader.push_dir(__dir__)
 loader.collapse("#{__dir__}/features")
-loader.ignore(
-  "#{__dir__}/app.rb",
-  "#{__dir__}/patterns/db.rb",
-  "#{__dir__}/tests"
-)
+loader.ignore("#{__dir__}/app.rb")
 loader.setup
 
 class Sinatra::Base

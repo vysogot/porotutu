@@ -6,7 +6,7 @@ module Patterns
       bindings = args.keys.each_with_index.map { |k, i| "#{k} => $#{i + 1}" }.join(', ')
       sql = "SELECT * FROM #{name}(#{bindings})"
 
-      DB.with { |conn| conn.exec_params(sql, args.values) }
+      Database.with { |conn| conn.exec_params(sql, args.values) }
     end
   end
 end
