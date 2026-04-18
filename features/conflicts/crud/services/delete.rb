@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
-module Conflicts
-  module Crud
-    module Services
-      class Delete
-        extend Patterns::Service
-        include Patterns::Query
+module Porotutu
+  module Conflicts
+    module Crud
+      module Services
+        class Delete
+          extend Patterns::Service
+          include Patterns::Query
 
-        def call(id:, user_id:)
-          result = call_function('conflicts_crud_delete', p_id: id, p_user_id: user_id)
-          row = result.first
+          def call(id:, user_id:)
+            result = call_function('conflicts_crud_delete', p_id: id, p_user_id: user_id)
+            row = result.first
 
-          row && Mappers::Conflict.from_row(row)
+            row && Mappers::Conflict.from_row(row)
+          end
         end
       end
     end

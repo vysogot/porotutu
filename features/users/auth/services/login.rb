@@ -1,29 +1,31 @@
 # frozen_string_literal: true
 
-module Users
-  module Auth
-    module Services
-      class Login
-        extend Patterns::Service
-        include Patterns::Query
+module Porotutu
+  module Users
+    module Auth
+      module Services
+        class Login
+          extend Patterns::Service
+          include Patterns::Query
 
-        def call(params:)
-          result = call_function('find_user_by_email', p_email: params[:email])
-          row = result.first
+          def call(params:)
+            result = call_function('find_user_by_email', p_email: params[:email])
+            row = result.first
 
-          validate!(row, params[:password])
+            validate!(row, params[:password])
 
-          ::Mappers::User.from_row(row)
-        end
+            Mappers::User.from_row(row)
+          end
 
-        private
+          private
 
-        def validate!(row, password)
-          raise Errors::InvalidCredentials unless row
+          def validate!(row, password)
+            raise Errors::InvalidCredentials unless row
 
-          digest = BCrypt::Password.new(row['password_digest'])
+            digest = BCrypt::Password.new(row['password_digest'])
 
-          raise Errors::InvalidCredentials unless digest == password
+            raise Errors::InvalidCredentials unless digest == password
+          end
         end
       end
     end

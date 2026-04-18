@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-module Users
-  class Routes < Sinatra::Base
-    use Crud::Routes
-    use Auth::Routes
+module Porotutu
+  module Users
+    class Routes < Sinatra::Base
+      use Crud::Routes
+      use Auth::Routes
+    end
   end
 end

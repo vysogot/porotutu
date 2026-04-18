@@ -1,21 +1,23 @@
 # frozen_string_literal: true
 
-module Patterns
-  module Validations
-    private
+module Porotutu
+  module Patterns
+    module Validations
+      private
 
-    def validate_presence(errors, params, *fields)
-      fields.each do |field|
-        value = params[field]
-        errors[field] = 'is required' if value.nil? || value.strip.empty?
+      def validate_presence(errors, params, *fields)
+        fields.each do |field|
+          value = params[field]
+          errors[field] = 'is required' if value.nil? || value.strip.empty?
+        end
       end
-    end
 
-    def validate_length(errors, value, field, max)
-      return if errors.key?(field)
-      return if value.nil?
+      def validate_length(errors, value, field, max)
+        return if errors.key?(field)
+        return if value.nil?
 
-      errors[field] = "must be #{max} characters or less" if value.length > max
+        errors[field] = "must be #{max} characters or less" if value.length > max
+      end
     end
   end
 end

@@ -3,93 +3,95 @@
 require_relative '../test_helper'
 require 'tempfile'
 
-module Patterns
-  class TranslationsTest < Minitest::Test
-    FIXTURE_YAML = <<~YAML
-      greeting: "Hello"
-      nested:
-        deep:
-          key: "Deep value"
-      with_one: "Hi {{name}}"
-      with_many: "{{greeting}}, {{name}}!"
-    YAML
+module Porotutu
+  module Patterns
+    class TranslationsTest < Minitest::Test
+      FIXTURE_YAML = <<~YAML
+        greeting: "Hello"
+        nested:
+          deep:
+            key: "Deep value"
+        with_one: "Hi {{name}}"
+        with_many: "{{greeting}}, {{name}}!"
+      YAML
 
-    def setup
-      @original_locales_path = Patterns::Translations::LOCALES_PATH
-      @tmp = write_fixture_yaml
-      swap_locales_path(@tmp.path)
-      reset_memoization
-    end
-
-    def teardown
-      swap_locales_path(@original_locales_path)
-      reset_memoization
-      @tmp.close!
-    end
-
-    def test_returns_plain_string_without_interpolations
-      assert_equal 'Hello', Patterns::Translations.t('greeting')
-    end
-
-    def test_replaces_single_interpolation
-      assert_equal 'Hi Ada', Patterns::Translations.t('with_one', name: 'Ada')
-    end
-
-    def test_replaces_multiple_interpolations
-      assert_equal(
-        'Hey, Ada!',
-        Patterns::Translations.t('with_many', greeting: 'Hey', name: 'Ada')
-      )
-    end
-
-    def test_missing_key_returns_prefixed_key
-      assert_equal 'TRANSLATE!!: does.not.exist', Patterns::Translations.t('does.not.exist')
-    end
-
-    def test_nested_dot_keys_resolve_through_nested_hashes
-      assert_equal 'Deep value', Patterns::Translations.t('nested.deep.key')
-    end
-
-    def test_partial_path_hitting_non_hash_returns_missing_prefix
-      assert_equal 'TRANSLATE!!: greeting.nope', Patterns::Translations.t('greeting.nope')
-    end
-
-    def test_mtime_change_triggers_reload
-      assert_equal 'Hello', Patterns::Translations.t('greeting')
-
-      File.write(@tmp.path, "greeting: \"Hola\"\n")
-      future = Time.now + 2
-      File.utime(future, future, @tmp.path)
-
-      assert_equal 'Hola', Patterns::Translations.t('greeting')
-    end
-
-    private
-
-    def write_fixture_yaml
-      tmp = Tempfile.new(['translations', '.yml'])
-      tmp.write(FIXTURE_YAML)
-      tmp.flush
-      tmp
-    end
-
-    def swap_locales_path(path)
-      with_silenced_warnings do
-        Patterns::Translations.const_set(:LOCALES_PATH, path)
+      def setup
+        @original_locales_path = Patterns::Translations::LOCALES_PATH
+        @tmp = write_fixture_yaml
+        swap_locales_path(@tmp.path)
+        reset_memoization
       end
-    end
 
-    def reset_memoization
-      Patterns::Translations.instance_variable_set(:@translations, nil)
-      Patterns::Translations.instance_variable_set(:@loaded_at, nil)
-    end
+      def teardown
+        swap_locales_path(@original_locales_path)
+        reset_memoization
+        @tmp.close!
+      end
 
-    def with_silenced_warnings
-      original = $VERBOSE
-      $VERBOSE = nil
-      yield
-    ensure
-      $VERBOSE = original
+      def test_returns_plain_string_without_interpolations
+        assert_equal 'Hello', Patterns::Translations.t('greeting')
+      end
+
+      def test_replaces_single_interpolation
+        assert_equal 'Hi Ada', Patterns::Translations.t('with_one', name: 'Ada')
+      end
+
+      def test_replaces_multiple_interpolations
+        assert_equal(
+          'Hey, Ada!',
+          Patterns::Translations.t('with_many', greeting: 'Hey', name: 'Ada')
+        )
+      end
+
+      def test_missing_key_returns_prefixed_key
+        assert_equal 'TRANSLATE!!: does.not.exist', Patterns::Translations.t('does.not.exist')
+      end
+
+      def test_nested_dot_keys_resolve_through_nested_hashes
+        assert_equal 'Deep value', Patterns::Translations.t('nested.deep.key')
+      end
+
+      def test_partial_path_hitting_non_hash_returns_missing_prefix
+        assert_equal 'TRANSLATE!!: greeting.nope', Patterns::Translations.t('greeting.nope')
+      end
+
+      def test_mtime_change_triggers_reload
+        assert_equal 'Hello', Patterns::Translations.t('greeting')
+
+        File.write(@tmp.path, "greeting: \"Hola\"\n")
+        future = Time.now + 2
+        File.utime(future, future, @tmp.path)
+
+        assert_equal 'Hola', Patterns::Translations.t('greeting')
+      end
+
+      private
+
+      def write_fixture_yaml
+        tmp = Tempfile.new(['translations', '.yml'])
+        tmp.write(FIXTURE_YAML)
+        tmp.flush
+        tmp
+      end
+
+      def swap_locales_path(path)
+        with_silenced_warnings do
+          Patterns::Translations.const_set(:LOCALES_PATH, path)
+        end
+      end
+
+      def reset_memoization
+        Patterns::Translations.instance_variable_set(:@translations, nil)
+        Patterns::Translations.instance_variable_set(:@loaded_at, nil)
+      end
+
+      def with_silenced_warnings
+        original = $VERBOSE
+        $VERBOSE = nil
+        yield
+      ensure
+        $VERBOSE = original
+      end
     end
   end
 end

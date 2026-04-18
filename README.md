@@ -9,7 +9,7 @@ bundle                        # install gems
 bundle exec rackup            # run dev server (Puma via rackup, reads .env)
 bundle exec rake test         # run all tests (tests/**/*_test.rb)
 bundle exec rake db:reset     # dev/test only: drop schema, create, migrate, load functions, seed
-bundle exec rake db:migrate   # run pending migrations from db/migrate
+bundle exec rake db:migrate   # run pending migrations from db/migrations
 bundle exec rake db:functions # reload every features/*/functions/**/*.sql
 bundle exec rake db:seed      # apply db/seeds
 bin/console                   # IRB with the full app loaded

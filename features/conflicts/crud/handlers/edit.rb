@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
-module Conflicts
-  module Crud
-    module Handlers
-      class Edit
-        extend Patterns::Service
+module Porotutu
+  module Conflicts
+    module Crud
+      module Handlers
+        class Edit
+          extend Patterns::Service
 
-        def call(params:, current_user_id:)
-          conflict = Services::FindOne.call(id: params[:id], user_id: current_user_id)
+          def call(params:, current_user_id:)
+            conflict = Services::FindOne.call(id: params[:id], user_id: current_user_id)
 
-          { conflict: }
+            { conflict: }
+          end
         end
       end
     end

@@ -7,39 +7,54 @@ require 'bcrypt'
 require 'pg'
 require 'debug'
 
+module Porotutu; end
+
 loader = Zeitwerk::Loader.new
-loader.push_dir(__dir__)
+loader.push_dir(__dir__, namespace: Porotutu)
 loader.collapse("#{__dir__}/features")
-loader.ignore("#{__dir__}/app.rb")
+loader.ignore(
+  "#{__dir__}/app.rb",
+  "#{__dir__}/bin",
+  "#{__dir__}/lib",
+  "#{__dir__}/tests",
+  "#{__dir__}/db",
+  "#{__dir__}/ksiaki",
+  "#{__dir__}/public",
+  "#{__dir__}/layouts",
+  "#{__dir__}/partials",
+  "#{__dir__}/locales"
+)
 loader.setup
 
-module Sinatra
+module Sinatra # rubocop:disable Style/OneClassPerFile
   class Base
     set :turbo_stream, 'text/vnd.turbo-stream.html'
   end
 end
 
-class App < Sinatra::Base # rubocop:disable Style/OneClassPerFile
-  configure :development do
-    register Sinatra::Reloader
-    also_reload File.join(__dir__, 'patterns/**/*.rb')
-    also_reload File.join(__dir__, 'features/**/*.rb')
-    also_reload File.join(__dir__, 'mappers/**/*.rb')
-  end
+module Porotutu # rubocop:disable Style/OneClassPerFile
+  class App < Sinatra::Base
+    configure :development do
+      register Sinatra::Reloader
+      also_reload File.join(__dir__, 'patterns/**/*.rb')
+      also_reload File.join(__dir__, 'features/**/*.rb')
+      also_reload File.join(__dir__, 'mappers/**/*.rb')
+    end
 
-  set :public_folder, File.join(__dir__, 'public')
+    set :public_folder, File.join(__dir__, 'public')
 
-  enable :sessions
-  set :session_secret, ENV.fetch('SESSION_SECRET')
-  set :sessions, key: 'porotutu.session', httponly: true, same_site: :lax
+    enable :sessions
+    set :session_secret, ENV.fetch('SESSION_SECRET')
+    set :sessions, key: 'porotutu.session', httponly: true, same_site: :lax
 
-  use Patterns::CsrfProtection
-  use Patterns::Authentication
+    use Patterns::CsrfProtection
+    use Patterns::Authentication
 
-  use Users::Routes
-  use Conflicts::Routes
+    use Users::Routes
+    use Conflicts::Routes
 
-  get '/' do
-    redirect '/conflicts'
+    get '/' do
+      redirect '/conflicts'
+    end
   end
 end
