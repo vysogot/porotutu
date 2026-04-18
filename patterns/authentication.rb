@@ -15,6 +15,7 @@ module Patterns
       if authenticated?(env)
         @app.call(env)
       else
+        ReturnTo.set(env['rack.session'], env)
         [302, { 'location' => '/login' }, []]
       end
     end

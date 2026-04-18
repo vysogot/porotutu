@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 
 ruby '4.0.1'
 
+gem 'connection_pool'
 gem 'debug'
 gem 'dotenv'
 gem 'erb-formatter'

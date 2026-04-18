@@ -14,7 +14,8 @@ loader.push_dir(__dir__)
 loader.collapse("#{__dir__}/features")
 loader.ignore(
   "#{__dir__}/app.rb",
-  "#{__dir__}/patterns/db.rb"
+  "#{__dir__}/patterns/db.rb",
+  "#{__dir__}/tests"
 )
 loader.setup
 
@@ -39,7 +40,6 @@ class App < Sinatra::Base
   use Patterns::CsrfProtection
   use Patterns::Authentication
 
-  use Auth::Routes
   use Users::Routes
   use Conflicts::Routes
 

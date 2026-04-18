@@ -6,31 +6,28 @@ require 'pg'
 require 'bcrypt'
 require 'zeitwerk'
 
-require_relative '../patterns/database'
+require_relative '../patterns/db'
 
 loader = Zeitwerk::Loader.new
 loader.push_dir(File.expand_path('..', __dir__))
 loader.collapse(File.expand_path('../features', __dir__))
-Dir.glob(File.expand_path('../features/*/models', __dir__)).each do |dir|
-  loader.collapse(dir)
-end
 loader.ignore(
   File.expand_path('../app.rb', __dir__),
-  File.expand_path('../patterns/database.rb', __dir__),
+  File.expand_path('../patterns/db.rb', __dir__),
   __dir__
 )
 loader.setup
 
-module Conflicts
-  module Tests
-    class TestCase < Minitest::Test
-      def setup
-        DB.connection.exec('BEGIN')
-      end
+module Tests
+  class TestCase < Minitest::Test
+    def setup
+      @_db_conn = DB.pool.checkout
+      @_db_conn.exec('BEGIN')
+    end
 
-      def teardown
-        DB.connection.exec('ROLLBACK')
-      end
+    def teardown
+      @_db_conn.exec('ROLLBACK')
+      DB.pool.checkin
     end
   end
 end

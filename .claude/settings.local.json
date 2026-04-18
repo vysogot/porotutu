@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(bundle install:*)"
+      "Bash(bundle install:*)",
+      "Bash(bundle exec *)",
+      "Bash(bin/console)",
+      "Bash(APP_ENV=test bundle exec rake test)",
+      "Bash(git commit *)"
     ]
   }
 }

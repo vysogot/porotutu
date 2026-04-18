@@ -14,7 +14,7 @@ module Patterns
       session = env['rack.session']
       session['csrf_token'] ||= SecureRandom.hex(32)
 
-      if MUTATING_METHODS.include?(env['REQUEST_METHOD']) && ENV['RACK_ENV'] != 'test'
+      if MUTATING_METHODS.include?(env['REQUEST_METHOD']) && ENV['APP_ENV'] != 'test'
         request = Rack::Request.new(env)
         token = request.params['csrf_token']
 

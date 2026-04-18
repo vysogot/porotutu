@@ -5,10 +5,11 @@ module Conflicts
     module Services
       class Update
         extend Patterns::Service
+        include Patterns::Query
 
         def call(id:, title:, description:, favor:)
-          result = DB.connection.exec_params(
-            'SELECT * FROM conflicts_crud_update($1, $2, $3, $4)',
+          result = call_function(
+            'conflicts_crud_update',
             [id, title, description, favor]
           )
 

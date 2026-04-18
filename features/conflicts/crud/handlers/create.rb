@@ -5,7 +5,6 @@ module Conflicts
     module Handlers
       class Create
         extend Patterns::Service
-        include Constants
 
         def call(params:, current_user_id:)
           params = params.slice(:title, :description, :favor)
@@ -17,7 +16,7 @@ module Conflicts
             title: params[:title],
             description: params[:description],
             favor: params[:favor],
-            status: STATUSES[:draft]
+            status: 'draft'
           )
 
           { conflict:, current_user_id: }

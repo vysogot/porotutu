@@ -4,13 +4,15 @@ module Mappers
   User = Data.define(
     :id,
     :email,
-    :password_digest,
+    :created_at,
+    :updated_at
   ) do
     def self.from_row(row)
       new(
         id: row['id'],
         email: row['email'],
-        password_digest: row['password_digest']
+        created_at: row['created_at'],
+        updated_at: row['updated_at']
       )
     end
   end

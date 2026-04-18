@@ -130,7 +130,7 @@ namespace :db do
   task :reset do
     env = ENV.fetch('APP_ENV')
 
-    unless %w[development testing].include?(env)
+    unless %w[development test].include?(env)
       puts "\n#{Color.error("Can't run in '#{env}', do it manually or use 'rake db:migrate'")}\n\n"
       exit 1
     end

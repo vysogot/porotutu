@@ -4,6 +4,7 @@ GEM
     ast (2.4.2)
     base64 (0.3.0)
     bcrypt (3.1.22)
+    connection_pool (3.0.2)
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -110,6 +111,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  connection_pool
   debug
   dotenv
   erb-formatter

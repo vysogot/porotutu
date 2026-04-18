@@ -1,19 +1,21 @@
 # frozen_string_literal: true
 
-module Conflicts
+module Users
   module Crud
     module Services
       class Create
         extend Patterns::Service
         include Patterns::Query
 
-        def call(user_id:, title:, description:, favor:, status:)
+        def call(params:)
+          password_digest = BCrypt::Password.create(params[:password])
+
           result = call_function(
-            'conflicts_crud_create',
-            [user_id, title, description, favor, status]
+            'create_user',
+            [params[:email], password_digest]
           )
 
-          Mappers::Conflict.from_row(result.first)
+          ::Mappers::User.from_row(result.first)
         end
       end
     end
