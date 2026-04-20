@@ -12,6 +12,7 @@ module Porotutu; end
 loader = Zeitwerk::Loader.new
 loader.push_dir(__dir__, namespace: Porotutu)
 loader.collapse("#{__dir__}/features")
+loader.collapse("#{__dir__}/features/*/{services,handlers,validators,helpers,errors,mappers}")
 loader.ignore(
   "#{__dir__}/app.rb",
   "#{__dir__}/bin",
