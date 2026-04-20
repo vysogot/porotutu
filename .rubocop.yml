@@ -10,3 +10,7 @@ Style/Documentation:
 
 Minitest/MultipleAssertions:
   Max: 5
+
+Metrics/BlockLength:
+  Exclude:
+    - 'tasks/**/*.rake'

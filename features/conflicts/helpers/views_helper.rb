@@ -3,7 +3,7 @@
 module Porotutu
   module Conflicts
     module ViewsHelper
-      include Patterns::Views
+      include Views
 
       VIEWS_DIR = File.expand_path('../views', __dir__)
 

@@ -3,8 +3,8 @@
 module Porotutu
   module Conflicts
     class FindManyService
-      extend Patterns::Service
-      include Patterns::Query
+      extend Service
+      include DbFunctionCall
 
       def call(user_id:)
         result = call_function('conflicts_crud_find_many', p_user_id: user_id)

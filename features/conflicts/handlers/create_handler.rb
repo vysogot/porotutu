@@ -3,7 +3,7 @@
 module Porotutu
   module Conflicts
     class CreateHandler
-      extend Patterns::Service
+      extend Service
 
       def call(params:, current_user_id:)
         params = params.slice(:title, :description, :favor)

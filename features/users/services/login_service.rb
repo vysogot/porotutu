@@ -3,8 +3,8 @@
 module Porotutu
   module Users
     class LoginService
-      extend Patterns::Service
-      include Patterns::Query
+      extend Service
+      include DbFunctionCall
 
       def call(params:)
         result = call_function('find_user_by_email', p_email: params[:email])

@@ -3,8 +3,8 @@
 module Porotutu
   module Users
     class CreateService
-      extend Patterns::Service
-      include Patterns::Query
+      extend Service
+      include DbFunctionCall
 
       def call(params:)
         password_digest = BCrypt::Password.create(params[:password])

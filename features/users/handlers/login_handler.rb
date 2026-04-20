@@ -3,7 +3,7 @@
 module Porotutu
   module Users
     class LoginHandler
-      extend Patterns::Service
+      extend Service
 
       def call(params:)
         params = params.slice(:email, :password)

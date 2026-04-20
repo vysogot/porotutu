@@ -11,6 +11,8 @@ module Porotutu; end
 
 loader = Zeitwerk::Loader.new
 loader.push_dir(__dir__, namespace: Porotutu)
+loader.collapse("#{__dir__}/lib")
+loader.collapse("#{__dir__}/lib/*")
 loader.collapse("#{__dir__}/features")
 loader.collapse("#{__dir__}/features/*/{services,handlers,validators,helpers,errors,mappers}")
 loader.ignore(
@@ -37,7 +39,7 @@ module Porotutu # rubocop:disable Style/OneClassPerFile
   class App < Sinatra::Base
     configure :development do
       register Sinatra::Reloader
-      also_reload File.join(__dir__, 'patterns/**/*.rb')
+      also_reload File.join(__dir__, 'lib/**/*.rb')
       also_reload File.join(__dir__, 'features/**/*.rb')
     end
 
@@ -47,8 +49,8 @@ module Porotutu # rubocop:disable Style/OneClassPerFile
     set :session_secret, ENV.fetch('SESSION_SECRET')
     set :sessions, key: 'porotutu.session', httponly: true, same_site: :lax
 
-    use Patterns::CsrfProtection
-    use Patterns::Authentication
+    use CsrfProtection
+    use Authentication
 
     use Users::Routes
     use Conflicts::Routes

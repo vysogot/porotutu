@@ -3,8 +3,8 @@
 module Porotutu
   module Conflicts
     class ConflictValidator
-      extend Patterns::Service
-      include Patterns::Validations
+      extend Service
+      include Validations
 
       TITLE_MAX = 100
       DESCRIPTION_MAX = 1000

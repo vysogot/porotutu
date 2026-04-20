@@ -3,8 +3,8 @@
 module Porotutu
   module Conflicts
     class DeleteService
-      extend Patterns::Service
-      include Patterns::Query
+      extend Service
+      include DbFunctionCall
 
       def call(id:, user_id:)
         result = call_function('conflicts_crud_delete', p_id: id, p_user_id: user_id)

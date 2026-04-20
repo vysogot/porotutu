@@ -41,7 +41,7 @@ All queries must go through a named SQL function. Never write raw `SELECT/INSERT
 
 ## Calling functions from services
 
-Services call SQL functions via `Patterns::Query#call_function`, which accepts a function name and a keyword hash of `p_*` arguments. The keys must match the SQL function's parameter names exactly — Postgres validates them and fails loudly on typos. Never pass a positional array.
+Services call SQL functions via `DbFunctionCall#call_function` (from `lib/infra/db_function_call.rb`), which accepts a function name and a keyword hash of `p_*` arguments. The keys must match the SQL function's parameter names exactly — Postgres validates them and fails loudly on typos. Never pass a positional array.
 
 ```ruby
 # GOOD

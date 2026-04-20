@@ -3,7 +3,7 @@
 module Porotutu
   module Conflicts
     class IndexHandler
-      extend Patterns::Service
+      extend Service
 
       def call(current_user_id:)
         conflicts = FindManyService.call(user_id: current_user_id)

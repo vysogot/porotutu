@@ -3,8 +3,8 @@
 module Porotutu
   module Conflicts
     class CreateService
-      extend Patterns::Service
-      include Patterns::Query
+      extend Service
+      include DbFunctionCall
 
       def call(user_id:, title:, description:, favor:, status:)
         result = call_function(
