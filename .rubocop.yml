@@ -14,3 +14,19 @@ Minitest/MultipleAssertions:
 Metrics/BlockLength:
   Exclude:
     - 'tasks/**/*.rake'
+    - 'features/**/views/**/*.rb'
+    - 'lib/patterns/layout.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - 'features/**/views/**/*.rb'
+    - 'lib/patterns/layout.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - 'features/**/views/**/*.rb'
+    - 'lib/patterns/layout.rb'
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'features/**/views/**/*.rb'

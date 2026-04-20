@@ -8,7 +8,7 @@ module Porotutu
       def call(params:, current_user_id:)
         conflict = FindOneService.call(id: params[:id], user_id: current_user_id)
 
-        { conflict:, current_user_id: }
+        { conflict: }
       end
     end
   end

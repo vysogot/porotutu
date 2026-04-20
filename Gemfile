@@ -26,3 +26,5 @@ end
 group :test do
   gem 'minitest'
 end
+
+gem 'phlex', '~> 2.4'

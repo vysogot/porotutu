@@ -6,24 +6,19 @@ Always add `data-turbo="false"` to login and registration forms. Turbo's fetch-b
 submission prevents session cookies from being committed before the redirect is
 followed, breaking the auth flow.
 
-```erb
-<form action="/session" method="post" data-turbo="false">
+```ruby
+form(action: '/session', method: 'post', data: { turbo: 'false' }) do
+  ...
+end
 ```
 
-## Rendering sub-templates inside ERB
+## Views are Phlex components
 
-Always pass `layout: false` when calling a `feature_erb` helper from within another
-template. Without it, the shared layout (nav, etc.) is rendered again for each call.
+Views live at `features/<name>/views/*.rb` under the `Porotutu::<Feature>::Views` namespace and inherit `PhlexView`. Routes render them with `.new(csrf_token: session['csrf_token'], **locals).call`. The shared `Porotutu::Layout` wraps page views; sub-components (e.g. `Card`) do not wrap themselves in `Layout`, they only render their own markup so they can be embedded inside an `Index`, a `Show`, or a turbo-stream `Update` without double-layout.
 
-```erb
-<%# GOOD — called from within a template %>
-<%= conflicts_erb :show, layout: false, locals: { id:, name: } %>
+## Turbo streams and frames
 
-<%# BAD — renders the full layout inside the template %>
-<%= conflicts_erb :show, locals: { id:, name: } %>
-```
-
-Only route handlers should call `feature_erb` helpers without `layout: false`.
+Custom elements are rendered with `tag(:'turbo-frame', ...)` / `tag(:'turbo-stream', ...)`. Partial-replacement responses (e.g. after PATCH) render only the component that goes inside `<template>`, not a full page — see `Conflicts::Views::Update`.
 
 ## Redirects after form submission
 

@@ -8,10 +8,7 @@ module Porotutu
       def call(current_user_id:)
         conflicts = FindManyService.call(user_id: current_user_id)
 
-        {
-          current_user_id:,
-          drafts: conflicts[:drafts]
-        }
+        { drafts: conflicts[:drafts] }
       end
     end
   end

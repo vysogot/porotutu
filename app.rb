@@ -14,7 +14,7 @@ loader.push_dir(__dir__, namespace: Porotutu)
 loader.collapse("#{__dir__}/lib")
 loader.collapse("#{__dir__}/lib/*")
 loader.collapse("#{__dir__}/features")
-loader.collapse("#{__dir__}/features/*/{services,handlers,validators,helpers,errors,mappers}")
+loader.collapse("#{__dir__}/features/*/{services,handlers,validators,helpers,errors,mappers,views}")
 loader.ignore(
   "#{__dir__}/app.rb",
   "#{__dir__}/bin",
@@ -23,8 +23,6 @@ loader.ignore(
   "#{__dir__}/db",
   "#{__dir__}/ksiaki",
   "#{__dir__}/public",
-  "#{__dir__}/layouts",
-  "#{__dir__}/partials",
   "#{__dir__}/locales"
 )
 loader.setup
@@ -45,6 +43,7 @@ module Porotutu # rubocop:disable Style/OneClassPerFile
 
     set :public_folder, File.join(__dir__, 'public')
 
+    enable :method_override
     enable :sessions
     set :session_secret, ENV.fetch('SESSION_SECRET')
     set :sessions, key: 'porotutu.session', httponly: true, same_site: :lax

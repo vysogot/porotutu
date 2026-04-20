@@ -15,7 +15,7 @@ loader.push_dir(root, namespace: Porotutu)
 loader.collapse("#{root}/lib")
 loader.collapse("#{root}/lib/*")
 loader.collapse("#{root}/features")
-loader.collapse("#{root}/features/*/{services,handlers,validators,helpers,errors,mappers}")
+loader.collapse("#{root}/features/*/{services,handlers,validators,helpers,errors,mappers,views}")
 loader.ignore(
   "#{root}/app.rb",
   "#{root}/bin",
@@ -23,8 +23,6 @@ loader.ignore(
   "#{root}/db",
   "#{root}/ksiaki",
   "#{root}/public",
-  "#{root}/layouts",
-  "#{root}/partials",
   "#{root}/locales",
   __dir__
 )

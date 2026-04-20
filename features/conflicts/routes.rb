@@ -3,28 +3,30 @@
 module Porotutu
   module Conflicts
     class Routes < Sinatra::Base
-      include ViewsHelper
-
       get '/conflicts' do
         locals = IndexHandler.call(current_user_id: session['user_id'])
 
-        view :index, locals:
+        IndexView.new(csrf_token: session['csrf_token'], **locals).call
       end
 
       get '/conflicts/new' do
-        view :new
+        NewView.new(csrf_token: session['csrf_token']).call
       end
 
       get '/conflicts/:id' do
         locals = ShowHandler.call(params:, current_user_id: session['user_id'])
 
-        view :show, locals:
+        ShowView.new(csrf_token: session['csrf_token'], **locals).call
       end
 
       get '/conflicts/:id/edit' do
         locals = EditHandler.call(params:, current_user_id: session['user_id'])
 
-        view :edit, locals:
+        EditView.new(
+          csrf_token: session['csrf_token'],
+          layout: !request.env['HTTP_TURBO_FRAME'],
+          **locals
+        ).call
       end
 
       post '/conflicts' do
@@ -32,17 +34,19 @@ module Porotutu
 
         redirect "/conflicts/#{locals[:conflict].id}", 303
       rescue ValidationError => e
-        view :new, locals: { errors: e.errors, params: }
+        status 422
+        NewView.new(csrf_token: session['csrf_token'], errors: e.errors, params:).call
       end
 
       patch '/conflicts/:id' do
         locals = UpdateHandler.call(params:)
 
         content_type settings.turbo_stream
-        view :update, layout: false, locals:
+        UpdateView.new(csrf_token: session['csrf_token'], **locals).call
       rescue ValidationError => e
+        status 422
         locals = EditHandler.call(params:, current_user_id: session['user_id'])
-        view :edit, locals: locals.merge(errors: e.errors, params:)
+        EditView.new(csrf_token: session['csrf_token'], **locals, errors: e.errors, params:).call
       end
 
       delete '/conflicts/:id' do

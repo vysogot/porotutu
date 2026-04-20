@@ -3,11 +3,10 @@
 module Porotutu
   module Users
     class Routes < Sinatra::Base
-      include ViewsHelper
       include SessionHelper
 
       get '/register' do
-        view :register
+        RegisterView.new(csrf_token: session['csrf_token']).call
       end
 
       post '/users' do
@@ -17,7 +16,7 @@ module Porotutu
       end
 
       get '/login' do
-        view :login, locals: { error: nil }
+        LoginView.new(csrf_token: session['csrf_token']).call
       end
 
       post '/session' do
@@ -26,7 +25,7 @@ module Porotutu
         session['user_id'] = locals[:user].id
         redirect post_login_path, 303
       rescue InvalidCredentials => e
-        view :login, locals: { error: e.message }
+        LoginView.new(csrf_token: session['csrf_token'], error: e.message).call
       end
 
       post '/logout' do

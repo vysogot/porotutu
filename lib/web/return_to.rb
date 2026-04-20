@@ -7,6 +7,7 @@ module Porotutu
 
     def self.set(session, env)
       return unless env['REQUEST_METHOD'] == 'GET'
+      return unless env['HTTP_ACCEPT'].to_s.include?('text/html')
 
       path = env['PATH_INFO']
       return if SKIP_PATHS.include?(path)

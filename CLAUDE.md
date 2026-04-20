@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Conflict-resolution app: Sinatra modular apps, Puma, PostgreSQL, BCrypt, Zeitwerk autoloading, ERB + Turbo views. No ORM — all database access goes through plpgsql functions called with `pg`. Ruby version pinned in `.tool-versions` (use `mise exec --` to invoke).
+Conflict-resolution app: Sinatra modular apps, Puma, PostgreSQL, BCrypt, Zeitwerk autoloading, Phlex + Turbo views. No ORM — all database access goes through plpgsql functions called with `pg`. Ruby version pinned in `.tool-versions` (use `mise exec --` to invoke).
 
 ## Commands
 
@@ -56,19 +56,19 @@ features/<name>/
   validators/       # raise ValidationError with an errors hash
   mappers/          # Data.define(...) with .from_row(row)
   errors/           # feature-specific exceptions (e.g. ValidationError)
-  helpers/          # ViewsHelper exposes `view` → feature_erb with VIEWS_DIR
-  views/            # ERB templates
+  helpers/          # route-level helpers (e.g. SessionHelper) — optional
+  views/            # Phlex components under `Porotutu::<Feature>::Views::*`, inherit PhlexView
   functions/        # *.sql — one plpgsql function per file, loaded by rake db:functions
 ```
 
-Request flow: `Routes` extracts params/session → `Handler.call(...)` → `Validator.call` → `Service.call` → `call_function('<name>_crud_<action>', p_foo: ...)` → `Mapper.from_row(result.first)`. Handlers return a `locals` hash; routes call `view :name, locals:` or redirect.
+Request flow: `Routes` extracts params/session → `Handler.call(...)` → `Validator.call` → `Service.call` → `call_function('<name>_crud_<action>', p_foo: ...)` → `Mapper.from_row(result.first)`. Handlers return a `locals` hash; routes render a view with `Views::Foo.new(csrf_token: session['csrf_token'], **locals).call` or redirect.
 
 ### `lib/`
 
 - `lib/infra/` — code that touches DB/ENV (`DbConnection` with ConnectionPool, `DbFunctionCall`, `Env`).
-- `lib/patterns/` — pure Ruby building blocks (`Service` with its `extend`-able `call(...) = new.call(...)`, `Validations#validate_presence/_length`, `Views#feature_erb/field_error/csrf_field/t`, `Translations`).
+- `lib/patterns/` — pure Ruby building blocks (`Service` with its `extend`-able `call(...) = new.call(...)`, `Validations#validate_presence/_length`, `Translations`, `PhlexView` base class with `t`/`csrf_field`/`field_error`, shared `Layout`).
 - `lib/web/` — Rack middleware (`Authentication`, `CsrfProtection`, `ReturnTo`).
-- `lib/layouts/main.erb`, `lib/partials/`, `lib/locales/en.yml` — shared views/i18n, ignored by Zeitwerk.
+- `lib/locales/en.yml` — i18n strings loaded by `Translations`.
 
 `Patterns::Service` is an `extend`-only module: every handler/service/validator does `extend Service` so callers use `FooService.call(...)`.
 
