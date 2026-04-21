@@ -23,7 +23,8 @@ loader.ignore(
   "#{__dir__}/db",
   "#{__dir__}/ksiaki",
   "#{__dir__}/public",
-  "#{__dir__}/locales"
+  "#{__dir__}/locales",
+  "#{__dir__}/lib/styles"
 )
 loader.setup
 
@@ -32,6 +33,8 @@ module Sinatra # rubocop:disable Style/OneClassPerFile
     set :turbo_stream, 'text/vnd.turbo-stream.html'
   end
 end
+
+Porotutu::StyleBundler.build unless Porotutu::Env.public?
 
 module Porotutu # rubocop:disable Style/OneClassPerFile
   class App < Sinatra::Base

@@ -24,6 +24,7 @@ loader.ignore(
   "#{root}/ksiaki",
   "#{root}/public",
   "#{root}/locales",
+  "#{root}/lib/styles",
   __dir__
 )
 loader.setup

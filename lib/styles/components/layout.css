@@ -1,0 +1,109 @@
+@layer components {
+  .page {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-12) var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      padding: var(--space-12) var(--space-6);
+    }
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-4);
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding: var(--space-8) var(--space-6);
+    }
+  }
+
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+
+  @media (min-width: 640px) {
+    .page-header {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+  }
+
+  .page-header__title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 640px) {
+    .page-header__title {
+      font-size: var(--font-size-3xl);
+    }
+  }
+
+  .page-header__subtitle {
+    margin-top: var(--space-1);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .page-header__actions {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  .section-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .stack--sm {
+    gap: var(--space-2);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .empty-state {
+    padding: var(--space-8);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+}

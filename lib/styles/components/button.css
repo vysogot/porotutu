@@ -1,0 +1,56 @@
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+
+  .btn--primary {
+    width: 100%;
+    padding: calc(var(--space-2) + 2px) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-inverse);
+    background: var(--color-accent);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn--primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .btn--ghost {
+    color: var(--color-text-muted);
+    background: transparent;
+  }
+
+  .btn--ghost:hover {
+    color: var(--color-text);
+    background: var(--color-accent-soft);
+  }
+
+  .btn--danger {
+    color: var(--color-danger);
+    background: transparent;
+  }
+
+  .btn--danger:hover {
+    background: var(--color-danger-soft);
+  }
+
+  .btn--icon {
+    padding: var(--space-2);
+    line-height: 1;
+  }
+
+  .btn--auto {
+    width: auto;
+  }
+}

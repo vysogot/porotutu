@@ -1,0 +1,55 @@
+@layer components {
+  .card {
+    width: 100%;
+    max-width: 28rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .card {
+      padding: var(--space-8);
+    }
+  }
+
+  .card__title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+  }
+
+  @media (min-width: 640px) {
+    .card__title {
+      font-size: var(--font-size-3xl);
+    }
+  }
+
+  .card__footer {
+    margin-top: var(--space-6);
+    text-align: center;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+  }
+
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-6);
+  }
+
+  @media (min-width: 640px) {
+    .panel {
+      padding: var(--space-8);
+    }
+  }
+
+  .panel__title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+  }
+}
