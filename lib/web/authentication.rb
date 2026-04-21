@@ -7,6 +7,8 @@ module Porotutu
       'POST' => %w[/session /users]
     }.freeze
 
+    PUBLIC_PATH_PREFIXES = %w[/stylesheets/ /javascript/ /images/].freeze
+
     def initialize(app)
       @app = app
     end
@@ -28,6 +30,8 @@ module Porotutu
 
       method = env['REQUEST_METHOD']
       path   = env['PATH_INFO']
+
+      return true if method == 'GET' && PUBLIC_PATH_PREFIXES.any? { |p| path.start_with?(p) }
 
       PUBLIC_PATHS.fetch(method, []).include?(path)
     end

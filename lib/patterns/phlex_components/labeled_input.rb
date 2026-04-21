@@ -5,8 +5,10 @@ module Porotutu
     module LabeledInput
       def labeled_input(name, label_text:, type: 'text', value: nil, required: false,
                         errors: nil, maxlength: nil, placeholder: nil, autofocus: false)
-        label(for: name) do
-          plain label_text
+        wrapper_class = errors&.key?(name) ? 'field field--invalid' : 'field'
+
+        div(class: wrapper_class) do
+          label(for: name, class: 'field__label') { plain label_text }
           input(
             **{
               type: type,
@@ -16,7 +18,8 @@ module Porotutu
               required: required || nil,
               maxlength: maxlength,
               placeholder: placeholder,
-              autofocus: autofocus || nil
+              autofocus: autofocus || nil,
+              class: 'field__input'
             }.compact
           )
           field_error(name, errors: errors)

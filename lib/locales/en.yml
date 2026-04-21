@@ -3,6 +3,7 @@ layouts:
     default_title: "Porotutu"
     nav_conflicts: "Conflicts"
     logout_button: "Logout"
+    theme_toggle_label: "Toggle theme"
 conflicts:
   index:
     heading: "Couple of Conflicts"

@@ -22,7 +22,7 @@ module Porotutu
     def field_error(field, errors: nil)
       return unless errors&.key?(field)
 
-      small { errors[field] }
+      p(class: 'field__error') { errors[field] }
     end
   end
 end
