@@ -43,7 +43,9 @@ module Porotutu
         section(id: 'conflicts-drafts-section') do
           h2 { t('conflicts.index.drafts_heading') }
           div(id: 'conflicts-drafts') do
-            @drafts.each { |conflict| render CardView.new(conflict:, csrf_token: @csrf_token) }
+            @drafts.each do |conflict|
+              render CardView.new(conflict:, csrf_token: @csrf_token)
+            end
           end
         end
       end

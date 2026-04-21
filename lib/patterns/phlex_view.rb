@@ -4,6 +4,10 @@ require 'phlex'
 
 module Porotutu
   class PhlexView < Phlex::HTML
+    include PhlexComponents::LabeledInput
+    include PhlexComponents::LabeledTextarea
+    include PhlexComponents::ProtectedForm
+
     def initialize(csrf_token: nil, **attrs)
       @csrf_token = csrf_token
       super(**attrs)
@@ -19,13 +23,6 @@ module Porotutu
       return unless errors&.key?(field)
 
       small(style: 'color: var(--pico-del-color);') { errors[field] }
-    end
-
-    def labeled_input(label_text, type:, name:, required: false)
-      label do
-        plain label_text
-        input(type: type, name: name, required: required || nil)
-      end
     end
   end
 end

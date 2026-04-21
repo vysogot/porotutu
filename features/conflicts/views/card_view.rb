@@ -15,7 +15,7 @@ module Porotutu
         tag(:'turbo-frame', id: conflict_frame_id(@conflict)) do
           article do
             card_header
-            p { @conflict.description } if @conflict.description && !@conflict.description.empty?
+            p { @conflict.description } unless @conflict.description.nil?
             draft_actions if @conflict.status == 'draft'
           end
         end
@@ -42,8 +42,7 @@ module Porotutu
       end
 
       def delete_form
-        form(method: 'delete', action: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) do
-          csrf_field
+        protected_form(method: 'delete', action: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) do
           button(type: 'submit', class: 'secondary outline') { t('conflicts.card.delete_button') }
         end
       end

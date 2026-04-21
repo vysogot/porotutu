@@ -19,8 +19,11 @@ module Porotutu
               csrf_token: @csrf_token,
               action: conflicts_path,
               method: 'post',
-              t_scope: 'new',
-              values: { title: @params[:title], description: @params[:description], favor: @params[:favor] },
+              values: {
+                title: @params[:title],
+                description: @params[:description],
+                favor: @params[:favor]
+              },
               errors: @errors,
               cancel_href: conflicts_path
             )

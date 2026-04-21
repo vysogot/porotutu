@@ -14,23 +14,19 @@ conflicts:
     favor_label: "Favor: {{favor}}"
     edit_button: "Edit"
     delete_button: "Delete"
-  new:
-    title: "New conflict"
+  form:
     title_label: "What's it about?"
     title_placeholder: "e.g. Who does the dishes"
     description_label: "Describe the conflict"
     description_placeholder: "Give some context..."
     favor_label: "What's the favor that would settle this?"
     favor_placeholder: "e.g. The other person cooks for a week"
-    submit_button: "Create conflict"
-    cancel_button: "Cancel"
-  edit:
-    title: "Edit conflict"
-    title_label: "What's it about?"
-    description_label: "Describe the conflict"
-    favor_label: "What's the favor?"
     submit_button: "Save"
     cancel_button: "Cancel"
+  new:
+    title: "New conflict"
+  edit:
+    title: "Edit conflict"
   show:
     back: "← Back to conflicts"
 users:

@@ -16,17 +16,21 @@ Metrics/BlockLength:
     - 'tasks/**/*.rake'
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/layout.rb'
+    - 'lib/patterns/phlex_components/**/*.rb'
 
 Metrics/MethodLength:
   Exclude:
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/layout.rb'
+    - 'lib/patterns/phlex_components/**/*.rb'
 
 Metrics/AbcSize:
   Exclude:
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/layout.rb'
+    - 'lib/patterns/phlex_components/**/*.rb'
 
 Metrics/ParameterLists:
   Exclude:
     - 'features/**/views/**/*.rb'
+    - 'lib/patterns/phlex_components/**/*.rb'

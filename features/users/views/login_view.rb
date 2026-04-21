@@ -26,10 +26,9 @@ module Porotutu
       end
 
       def login_form
-        form(action: session_path, method: 'post', data: { turbo: 'false' }) do
-          csrf_field
-          labeled_input(t('users.login.email_label'), type: 'email', name: 'email', required: true)
-          labeled_input(t('users.login.password_label'), type: 'password', name: 'password', required: true)
+        protected_form(action: session_path, method: 'post', data: { turbo: 'false' }) do
+          labeled_input(:email, label_text: t('users.login.email_label'), type: 'email', required: true)
+          labeled_input(:password, label_text: t('users.login.password_label'), type: 'password', required: true)
           button(type: 'submit') { t('users.login.submit_button') }
         end
       end

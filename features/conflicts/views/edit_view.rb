@@ -42,7 +42,6 @@ module Porotutu
           csrf_token: @csrf_token,
           action: conflict_path(@conflict),
           method: 'patch',
-          t_scope: 'edit',
           cancel_href: conflict_path(@conflict),
           values: {
             title: @params[:title] || @conflict.title,
