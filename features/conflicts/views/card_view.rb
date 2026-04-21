@@ -13,9 +13,9 @@ module Porotutu
 
       def view_template
         tag(:'turbo-frame', id: conflict_frame_id(@conflict)) do
-          article do
+          article(class: 'tile') do
             card_header
-            p { @conflict.description } unless @conflict.description.nil?
+            p(class: 'tile__body') { @conflict.description } unless @conflict.description.nil?
             draft_actions if @conflict.status == 'draft'
           end
         end
@@ -24,24 +24,26 @@ module Porotutu
       private
 
       def card_header
-        header do
-          h3 { a(href: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) { @conflict.title } }
-          small { t('conflicts.card.favor_label', favor: @conflict.favor) } if @conflict.favor
+        header(class: 'tile__header') do
+          h3(class: 'tile__title') do
+            a(href: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) { @conflict.title }
+          end
+          span(class: 'badge') { t('conflicts.card.favor_label', favor: @conflict.favor) } if @conflict.favor
         end
       end
 
       def draft_actions
-        footer do
-          div do
-            a(href: edit_conflict_path(@conflict)) { t('conflicts.card.edit_button') }
-            delete_form
+        footer(class: 'tile__footer') do
+          a(href: edit_conflict_path(@conflict), class: 'btn btn--ghost') do
+            t('conflicts.card.edit_button')
           end
+          delete_form
         end
       end
 
       def delete_form
         protected_form(method: 'delete', action: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) do
-          button(type: 'submit') { t('conflicts.card.delete_button') }
+          button(type: 'submit', class: 'btn btn--danger') { t('conflicts.card.delete_button') }
         end
       end
     end

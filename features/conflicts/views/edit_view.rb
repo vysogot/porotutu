@@ -17,7 +17,7 @@ module Porotutu
       def view_template
         if @layout
           render Porotutu::Layout.new(csrf_token: @csrf_token) do
-            main { frame }
+            main(class: 'container') { frame }
           end
         else
           frame
@@ -31,8 +31,8 @@ module Porotutu
       end
 
       def edit_article
-        article do
-          header { h3 { t('conflicts.edit.title') } }
+        article(class: 'panel') do
+          h3(class: 'panel__title') { t('conflicts.edit.title') }
           render form_component
         end
       end

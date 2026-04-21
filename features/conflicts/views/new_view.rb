@@ -13,20 +13,22 @@ module Porotutu
 
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token) do
-          main(id: 'new_conflict_frame') do
-            h2 { t('conflicts.new.title') }
-            render FormView.new(
-              csrf_token: @csrf_token,
-              action: conflicts_path,
-              method: 'post',
-              values: {
-                title: @params[:title],
-                description: @params[:description],
-                favor: @params[:favor]
-              },
-              errors: @errors,
-              cancel_href: conflicts_path
-            )
+          main(id: 'new_conflict_frame', class: 'container') do
+            div(class: 'panel') do
+              h2(class: 'panel__title') { t('conflicts.new.title') }
+              render FormView.new(
+                csrf_token: @csrf_token,
+                action: conflicts_path,
+                method: 'post',
+                values: {
+                  title: @params[:title],
+                  description: @params[:description],
+                  favor: @params[:favor]
+                },
+                errors: @errors,
+                cancel_href: conflicts_path
+              )
+            end
           end
         end
       end

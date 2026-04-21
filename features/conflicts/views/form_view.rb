@@ -17,7 +17,7 @@ module Porotutu
       end
 
       def view_template
-        protected_form(action: @action, method: form_method) do
+        protected_form(action: @action, method: form_method, class: 'form') do
           input(type: 'hidden', name: '_method', value: @method) if method_override?
 
           labeled_input(
@@ -47,9 +47,9 @@ module Porotutu
             errors: @errors
           )
 
-          div do
-            button(type: 'submit') { t('conflicts.form.submit_button') }
-            a(href: @cancel_href) { t('conflicts.form.cancel_button') }
+          div(class: 'form-actions') do
+            button(type: 'submit', class: 'btn btn--primary btn--auto') { t('conflicts.form.submit_button') }
+            a(href: @cancel_href, class: 'btn btn--ghost') { t('conflicts.form.cancel_button') }
           end
         end
       end

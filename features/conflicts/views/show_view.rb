@@ -12,8 +12,8 @@ module Porotutu
 
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token) do
-          main do
-            nav('aria-label': 'breadcrumb') do
+          main(class: 'container') do
+            nav('aria-label': 'breadcrumb', class: 'breadcrumb') do
               a(href: conflicts_path) { t('conflicts.show.back') }
             end
             render CardView.new(conflict: @conflict, csrf_token: @csrf_token)
