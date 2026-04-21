@@ -7,7 +7,11 @@
       "Bash(APP_ENV=test bundle exec rake test)",
       "Bash(git commit *)",
       "Bash(mise exec *)",
-      "Bash(APP_ENV=test mise exec -- bundle exec rake test)"
+      "Bash(APP_ENV=test mise exec -- bundle exec rake test)",
+      "Bash(psql --version)",
+      "Bash(psql -l)",
+      "Bash(brew services *)",
+      "Bash(createdb porotutu_development)"
     ]
   }
 }

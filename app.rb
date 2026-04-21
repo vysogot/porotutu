@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'lib/initializers/suppress_phlex_warnings'
+
 require 'sinatra'
 require 'sinatra/reloader'
 require 'bcrypt'

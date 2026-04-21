@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../test_helper'
+require_relative '../../test_helper'
 
 module Porotutu
   module Users
@@ -9,15 +9,15 @@ module Porotutu
         super
         @email = "login-#{SecureRandom.hex(4)}@example.com"
         @password = 'hunter22'
-        Users::CreateService.call(
-          params: { email: @email, password: @password }
+        Tests::Factories::UserFactory.create(
+          conn: @_db_conn,
+          email: @email,
+          password: @password
         )
       end
 
       def test_returns_user_mapper_on_valid_credentials
-        user = Users::LoginService.call(
-          params: { email: @email, password: @password }
-        )
+        user = LoginService.call(params: { email: @email, password: @password })
 
         assert_kind_of UserMapper, user
         assert_equal @email, user.email
@@ -25,18 +25,14 @@ module Porotutu
       end
 
       def test_raises_invalid_credentials_when_email_unknown
-        assert_raises(Users::InvalidCredentials) do
-          Users::LoginService.call(
-            params: { email: 'nobody@example.com', password: @password }
-          )
+        assert_raises(InvalidCredentials) do
+          LoginService.call(params: { email: 'nobody@example.com', password: @password })
         end
       end
 
       def test_raises_invalid_credentials_when_password_wrong
-        assert_raises(Users::InvalidCredentials) do
-          Users::LoginService.call(
-            params: { email: @email, password: 'wrong-password' }
-          )
+        assert_raises(InvalidCredentials) do
+          LoginService.call(params: { email: @email, password: 'wrong-password' })
         end
       end
     end
