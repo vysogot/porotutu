@@ -1,8 +1,8 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS conflicts_crud_update(UUID, TEXT, TEXT, TEXT);
+DROP FUNCTION IF EXISTS conflicts_update(UUID, TEXT, TEXT, TEXT);
 
-CREATE FUNCTION conflicts_crud_update(
+CREATE FUNCTION conflicts_update(
   p_id UUID,
   p_title TEXT,
   p_description TEXT,

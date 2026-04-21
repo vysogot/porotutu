@@ -64,13 +64,13 @@ A service that calls a mutating function returns `Mapper.from_row(result.first)`
 ```ruby
 # GOOD — single row
 def call(user_id:, title:, ...)
-  result = call_function('conflicts_crud_create', p_creator_id: user_id, ...)
+  result = call_function('conflicts_create', p_creator_id: user_id, ...)
   ConflictMapper.from_row(result.first)
 end
 
 # GOOD — collection
 def call(user_id:)
-  result = call_function('conflicts_crud_find_many', p_user_id: user_id)
+  result = call_function('conflicts_find_many', p_user_id: user_id)
   result.map do |row|
     ConflictMapper.from_row(row)
   end

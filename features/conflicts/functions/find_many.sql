@@ -1,8 +1,8 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS conflicts_crud_find_many(UUID);
+DROP FUNCTION IF EXISTS conflicts_find_many(UUID);
 
-CREATE FUNCTION conflicts_crud_find_many(p_user_id UUID)
+CREATE FUNCTION conflicts_find_many(p_user_id UUID)
 RETURNS SETOF conflicts AS $$
 BEGIN
   RETURN QUERY

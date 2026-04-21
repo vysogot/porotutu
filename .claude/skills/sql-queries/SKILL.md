@@ -47,7 +47,7 @@ Services call SQL functions via `DbFunctionCall#call_function` (from `lib/infra/
 ```ruby
 # GOOD
 call_function(
-  'conflicts_crud_create',
+  'conflicts_create',
   p_creator_id: user_id,
   p_title: title,
   p_description: description,
@@ -57,7 +57,7 @@ call_function(
 
 # BAD — positional array, no name validation
 call_function(
-  'conflicts_crud_create',
+  'conflicts_create',
   [user_id, title, description, favor, status]
 )
 ```

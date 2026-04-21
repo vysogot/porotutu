@@ -10,7 +10,7 @@ module Porotutu
         password_digest = BCrypt::Password.create(params[:password])
 
         result = call_function(
-          'create_user',
+          'users_create',
           p_email: params[:email],
           p_password_digest: password_digest
         )

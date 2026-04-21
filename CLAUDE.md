@@ -71,7 +71,7 @@ features/<name>/
   functions/        # *.sql — one plpgsql function per file, loaded by rake db:functions
 ```
 
-Request flow: `Routes` extracts params/session → `Handler.call(...)` → `Validator.call` → `Service.call` → `call_function('<name>_crud_<action>', p_foo: ...)` → `Mapper.from_row(result.first)`. Handlers return a `locals` hash; routes render a view with `Views::Foo.new(csrf_token: session['csrf_token'], **locals).call` or redirect.
+Request flow: `Routes` extracts params/session → `Handler.call(...)` → `Validator.call` → `Service.call` → `call_function('<name>_<action>', p_foo: ...)` → `Mapper.from_row(result.first)`. Handlers return a `locals` hash; routes render a view with `Views::Foo.new(csrf_token: session['csrf_token'], **locals).call` or redirect.
 
 ### `lib/`
 

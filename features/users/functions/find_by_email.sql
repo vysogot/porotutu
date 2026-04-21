@@ -1,8 +1,8 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS find_user_by_email(TEXT);
+DROP FUNCTION IF EXISTS users_find_by_email(TEXT);
 
-CREATE FUNCTION find_user_by_email(p_email TEXT)
+CREATE FUNCTION users_find_by_email(p_email TEXT)
 RETURNS SETOF users AS $$
 BEGIN
   RETURN QUERY

@@ -1,8 +1,8 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS conflicts_crud_find_one(UUID, UUID);
+DROP FUNCTION IF EXISTS conflicts_find_one(UUID, UUID);
 
-CREATE FUNCTION conflicts_crud_find_one(p_id UUID, p_creator_id UUID)
+CREATE FUNCTION conflicts_find_one(p_id UUID, p_creator_id UUID)
 RETURNS SETOF conflicts AS $$
 BEGIN
   RETURN QUERY

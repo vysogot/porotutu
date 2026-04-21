@@ -8,7 +8,7 @@ module Porotutu
 
       def call(id:, title:, description:, favor:)
         result = call_function(
-          'conflicts_crud_update',
+          'conflicts_update',
           p_id: id,
           p_title: title,
           p_description: description,

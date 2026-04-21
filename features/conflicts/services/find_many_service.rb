@@ -7,7 +7,7 @@ module Porotutu
       include DbFunctionCall
 
       def call(user_id:)
-        result = call_function('conflicts_crud_find_many', p_user_id: user_id)
+        result = call_function('conflicts_find_many', p_user_id: user_id)
 
         conflicts = result.map do |row|
           ConflictMapper.from_row(row)

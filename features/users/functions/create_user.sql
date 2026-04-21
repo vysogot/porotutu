@@ -1,8 +1,8 @@
 BEGIN;
 
-DROP FUNCTION IF EXISTS create_user(TEXT, TEXT);
+DROP FUNCTION IF EXISTS users_create(TEXT, TEXT);
 
-CREATE FUNCTION create_user(p_email TEXT, p_password_digest TEXT)
+CREATE FUNCTION users_create(p_email TEXT, p_password_digest TEXT)
 RETURNS SETOF users AS $$
 BEGIN
   RETURN QUERY
