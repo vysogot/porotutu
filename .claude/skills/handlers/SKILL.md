@@ -1,4 +1,9 @@
-# Handlers and Routes
+---
+name: handlers
+description: Use when writing or editing files under `features/*/handlers/` in this Sinatra/Porotutu app. Covers the handler contract — `extend Service`, slicing params at the top, calling the feature's validator then service(s), and returning a `locals` hash for the view. Trigger when adding a new feature slice, or when a route is getting too fat and needs to delegate to a handler. Also load when designing the boundary between the thin `Routes < Sinatra::Base` and the orchestration layer.
+---
+
+# Handlers
 
 Each feature has a thin `Routes < Sinatra::Base` that only deals with HTTP concerns (params, session, redirect, response type, template rendering). Everything else goes into a handler in `features/<name>/handlers/`.
 
@@ -41,28 +46,6 @@ ConflictValidator.call(params:)
 CreateService.call(**params)
 ```
 
-## Routes stay thin
+## Handlers never touch HTTP
 
-Routes extract session/params, call a single handler, and respond. No business logic, no DB access, no validation beyond what the handler does.
-
-```ruby
-# GOOD
-post '/conflicts' do
-  locals = CreateHandler.call(params:, current_user_id: session['user_id'])
-
-  redirect "/conflicts/#{locals[:conflict].id}", 303
-rescue ValidationError => e
-  view :new, locals: { errors: e.errors, params: }
-end
-```
-
-```ruby
-# BAD — validation + service call in the route
-post '/conflicts' do
-  ConflictValidator.call(params:)
-  conflict = CreateService.call(...)
-  redirect "/conflicts/#{conflict.id}", 303
-end
-```
-
-Handlers never touch `session`, `request`, `response`, or `redirect`. Pass `current_user_id:` in as a keyword arg — don't reach into Sinatra from the handler.
+Handlers never touch `session`, `request`, `response`, or `redirect`. Pass `current_user_id:` in as a keyword arg — don't reach into Sinatra from the handler. Handlers never rescue their own validation — the route does that and re-renders the form.

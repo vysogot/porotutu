@@ -1,3 +1,8 @@
+---
+name: style
+description: Use when writing or editing any Ruby file in this repo. Covers the small set of non-Rubocop style rules the project enforces: no whitespace alignment on `=`/hashes/kwargs, full translation keys at the call site (no `ts(...)` prefix helper), multi-entry hash literals spanning lines inside method calls, `do...end` (not inline `{}`) when a block renders a full component, and nil-only nil checks (no redundant `empty?`). Trigger on any Ruby edit, not just new files.
+---
+
 # General Coding Style
 
 ## No whitespace alignment
@@ -92,4 +97,3 @@ p { @conflict.description } unless @conflict.description.nil?
 # BAD — redundant empty? check for a value that's either nil or a real string
 p { @conflict.description } if @conflict.description && !@conflict.description.empty?
 ```
-

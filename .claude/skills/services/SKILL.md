@@ -1,3 +1,8 @@
+---
+name: services
+description: Use when writing or editing files under `features/*/services/` or when defining any new single-method service/handler/validator class in this app. Covers the `extend Service` convention from `lib/patterns/service.rb`, calling as `FooService.call(...)`, keyword-arg-only `#call`, and mixing in `DbFunctionCall` / `Validations`. Trigger when a task mentions "service", "service object", or when adding a class that wraps a single domain operation.
+---
+
 # Service Object Pattern
 
 Every handler, service, and validator is a single-method class invoked as `FooService.call(...)`. The class-level `call` is provided by the `Service` module (`lib/patterns/service.rb`), which just does `new.call(...)`. This keeps each class stateless from the caller's perspective while leaving `#call` free to use instance helpers.

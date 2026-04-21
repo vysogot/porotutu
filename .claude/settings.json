@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit(/.claude/skills/handlers/**)",
+      "Edit(/.claude/skills/services/**)",
+      "Edit(/.claude/skills/validators/**)"
+    ]
+  }
+}

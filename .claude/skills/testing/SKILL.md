@@ -1,3 +1,8 @@
+---
+name: testing
+description: Use when writing or editing files under `tests/` — Minitest test files ending in `_test.rb`. Covers inheriting `Porotutu::Tests::TestCase` so each test runs inside a DB transaction that rolls back in teardown, the no-mocks policy (tests hit a real Postgres), not opening your own `PG.connect` / `DbConnection.pool.with`, not cleaning up manually, and generating unique values (`SecureRandom.hex`) for unique columns like `email`. Trigger on "write a test", "add a test", `test_`, `_test.rb`, or anything involving the test runner.
+---
+
 # Tests
 
 Minitest, run via `bundle exec rake test`. Tests hit a real Postgres (`APP_ENV=testing`, `DATABASE_URL` pointing at the test DB) — there are no mocks.

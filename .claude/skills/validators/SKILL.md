@@ -1,6 +1,11 @@
+---
+name: validators
+description: Use when writing or editing files under `features/*/validators/`, or when adding presence/length/format checks for user input. Covers validator shape (`errors = {}`, `raise ValidationError, errors if errors.any?`), the `Validations` mixin (`validate_presence`, `validate_length`), and where rescue happens (route, not handler). Trigger on "validate", "validator", "errors hash", or when shaping new form input.
+---
+
 # Validators
 
-Every feature that accepts user input has a validator in `features/<name>/validators/` plus a feature-local `ValidationError` in `features/<name>/errors/`.
+Every feature that accepts user input has a validator in `features/<name>/validators/` plus a feature-local `ValidationError` in `features/<name>/errors/` (see the `errors` skill for the error class itself).
 
 ## Validator shape
 
@@ -40,28 +45,6 @@ end
 # BAD — raising with a string loses per-field context needed by the form
 raise ValidationError, 'title is required'
 ```
-
-## ValidationError per feature
-
-Each feature defines its own `ValidationError` under `features/<name>/errors/validation_error.rb`. It carries the errors hash so the route can re-render the form.
-
-```ruby
-# features/conflicts/errors/validation_error.rb
-module Porotutu
-  module Conflicts
-    class ValidationError < StandardError
-      attr_reader :errors
-
-      def initialize(errors)
-        @errors = errors
-        super('Validation failed')
-      end
-    end
-  end
-end
-```
-
-Don't share a single global `ValidationError` across features — keep the class scoped to the feature that raises it, so the route's rescue can't accidentally catch a different feature's error.
 
 ## Rescue in the route, not the handler
 

@@ -1,3 +1,8 @@
+---
+name: mappers
+description: Use when writing or editing files under `features/*/mappers/`, or when a service needs to return a typed value object instead of a raw `PG::Result` row. Covers `Data.define(...)` shape, `.from_row(row)` by explicit string keys, naming (`<Thing>Mapper` suffix), and what must not leak (password_digest and other sensitive columns). Trigger on "mapper", "Data.define", "from_row", or when shaping service return values.
+---
+
 # Mappers
 
 Services never return raw `PG::Result` rows to callers. They map the first row into a value object defined with `Data.define`, so handlers, views, and tests work with a typed object instead of a string-keyed hash.

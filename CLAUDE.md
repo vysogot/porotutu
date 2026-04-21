@@ -24,20 +24,29 @@ bin/console                   # IRB with full app loaded
 
 `APP_ENV`, `DATABASE_URL`, `SESSION_SECRET` must be set (see `.env`). `db:reset` refuses to run when `APP_ENV` is `production` or `staging`.
 
-## Conventions in `.claude/rules/`
+## Conventions
 
-Project-specific style rules live in `.claude/rules/` and are loaded automatically:
-- `service.md` — `extend Service` pattern, keyword args, never `new.call` or `def self.call`.
-- `handler.md` — thin routes, handlers slice params, call validator + service, return a `locals` hash; handlers never touch `session`/`request`/`response`.
-- `validation.md` — validators build an errors hash and `raise ValidationError`; per-feature `ValidationError` class; routes rescue and re-render.
-- `mapper.md` — `Data.define(...)` + `.from_row(row)`; services return mapped objects, never raw `PG::Result` rows.
-- `sql.md` — SQL function structure, `DbFunctionCall#call_function` usage (named `p_*` args), mapping with `do...end`, mutations must `RETURN`ing rows.
-- `sinatra.md` — `register Sinatra::Reloader` must be inside `configure :development` (modular apps).
-- `turbo.md` — `data-turbo="false"` on auth forms, pass `layout: false` when rendering a `feature_erb` from inside another template, use `303` for post-submit redirects.
-- `testing.md` — inherit `Porotutu::Tests::TestCase` for transaction-wrapped tests; no mocks; don't open extra DB connections.
-- `style.md` — no whitespace alignment on `=`, hash values, keyword args, etc.
+Project-specific conventions live as on-demand skills in `.claude/skills/`. They are loaded only when the current task matches the skill's description — not on every turn. One skill mirrors each feature sub-folder, plus a few cross-cutting skills:
 
-Follow these without repeating their rationale here.
+Per-feature layer (mirrors `features/<name>/` folders):
+- `handlers/` — handler contract: slice params, call validator + service, return `locals`.
+- `services/` — `extend Service` pattern, kwarg-only `#call`, `DbFunctionCall` / `Validations` mixins.
+- `validators/` — build errors hash, `raise ValidationError`, rescue in the route.
+- `errors/` — per-feature `ValidationError` convention.
+- `mappers/` — `Data.define` + `.from_row` value objects; services return mapped objects.
+- `functions/` — plpgsql file structure (DROP+CREATE, `RETURNING *`).
+- `routes/` — thin `Sinatra::Base` subclasses; modular-app reloader placement.
+- `views/` — Phlex views, Layout wrapping, turbo-frame/stream fragments.
+- `helpers/` — per-feature Ruby modules (paths, DOM ids, session utils).
+
+Cross-cutting:
+- `turbo/` — `data-turbo="false"` on auth forms, `303` post-submit redirects, frames/streams.
+- `testing/` — `Porotutu::Tests::TestCase` transaction-wrapping, no mocks.
+- `sql-queries/` — `call_function(...)` Ruby-side usage and formatting.
+- `style/` — no whitespace alignment, full `t(...)` keys, `do...end` for render loops.
+- `phlex-components/` — `PhlexView` / `Layout` / shared form mixins in `lib/patterns/phlex_components/`.
+
+To read a skill, open `.claude/skills/<name>/SKILL.md`.
 
 ## Architecture
 
