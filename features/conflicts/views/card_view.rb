@@ -32,10 +32,8 @@ module Porotutu
 
       def draft_actions
         footer do
-          div(class: 'grid') do
-            a(href: edit_conflict_path(@conflict), role: 'button', class: 'outline') do
-              t('conflicts.card.edit_button')
-            end
+          div do
+            a(href: edit_conflict_path(@conflict)) { t('conflicts.card.edit_button') }
             delete_form
           end
         end
@@ -43,7 +41,7 @@ module Porotutu
 
       def delete_form
         protected_form(method: 'delete', action: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) do
-          button(type: 'submit', class: 'secondary outline') { t('conflicts.card.delete_button') }
+          button(type: 'submit') { t('conflicts.card.delete_button') }
         end
       end
     end

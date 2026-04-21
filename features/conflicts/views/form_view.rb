@@ -47,9 +47,9 @@ module Porotutu
             errors: @errors
           )
 
-          div(class: 'grid') do
+          div do
             button(type: 'submit') { t('conflicts.form.submit_button') }
-            a(href: @cancel_href, role: 'button', class: 'secondary outline') { t('conflicts.form.cancel_button') }
+            a(href: @cancel_href) { t('conflicts.form.cancel_button') }
           end
         end
       end

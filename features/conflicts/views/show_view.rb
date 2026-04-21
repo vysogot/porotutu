@@ -12,7 +12,7 @@ module Porotutu
 
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token) do
-          main(class: 'container') do
+          main do
             nav('aria-label': 'breadcrumb') do
               a(href: conflicts_path) { t('conflicts.show.back') }
             end

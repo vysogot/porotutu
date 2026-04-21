@@ -12,7 +12,7 @@ module Porotutu
 
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token) do
-          main(class: 'container', id: 'conflicts-container') do
+          main(id: 'conflicts-container') do
             page_header
             @drafts.empty? ? empty_state : drafts_section
           end
@@ -22,14 +22,12 @@ module Porotutu
       private
 
       def page_header
-        header(class: 'container') do
+        header do
           hgroup do
             h1 { t('conflicts.index.heading') }
             p { t('conflicts.index.subheading') }
             nav do
-              a(href: new_conflict_path, role: 'button', class: 'outline') do
-                t('conflicts.index.new_button')
-              end
+              a(href: new_conflict_path) { t('conflicts.index.new_button') }
             end
           end
         end

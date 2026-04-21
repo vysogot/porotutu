@@ -12,7 +12,7 @@ module Porotutu
 
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token, show_nav: false) do
-          main(class: 'container') { article { login_card } }
+          main { article { login_card } }
         end
       end
 

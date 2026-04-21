@@ -22,7 +22,7 @@ module Porotutu
     def field_error(field, errors: nil)
       return unless errors&.key?(field)
 
-      small(style: 'color: var(--pico-del-color);') { errors[field] }
+      small { errors[field] }
     end
   end
 end

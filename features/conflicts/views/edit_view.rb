@@ -17,7 +17,7 @@ module Porotutu
       def view_template
         if @layout
           render Porotutu::Layout.new(csrf_token: @csrf_token) do
-            main(class: 'container') { frame }
+            main { frame }
           end
         else
           frame

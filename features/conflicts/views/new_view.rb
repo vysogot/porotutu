@@ -13,7 +13,7 @@ module Porotutu
 
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token) do
-          main(class: 'container', id: 'new_conflict_frame') do
+          main(id: 'new_conflict_frame') do
             h2 { t('conflicts.new.title') }
             render FormView.new(
               csrf_token: @csrf_token,

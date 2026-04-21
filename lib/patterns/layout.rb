@@ -17,7 +17,7 @@ module Porotutu
           meta(name: 'description', content: 'A place to build your conflicts. Good conflicts.')
           link(rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon.ico')
           title { @title || t('layouts.main.default_title') }
-          link(rel: 'stylesheet', href: 'https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css')
+          script(src: 'https://cdn.tailwindcss.com')
           script(type: 'module') do
             raw safe("import hotwiredTurbo from 'https://cdn.skypack.dev/@hotwired/turbo@7.3.0';")
           end
@@ -33,13 +33,13 @@ module Porotutu
     private
 
     def render_nav
-      nav(class: 'container') do
+      nav do
         ul { li { a(href: '/conflicts') { t('layouts.main.nav_conflicts') } } }
         ul do
           li do
             form(action: '/logout', method: 'post', data: { turbo: 'false' }) do
               csrf_field
-              button(type: 'submit', class: 'outline') { t('layouts.main.logout_button') }
+              button(type: 'submit') { t('layouts.main.logout_button') }
             end
           end
         end
