@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'zeitwerk'
 require 'sinatra'
 require 'sinatra/reloader'
 require 'bcrypt'
@@ -9,32 +8,15 @@ require 'debug'
 
 module Porotutu; end
 
-loader = Zeitwerk::Loader.new
-loader.push_dir(__dir__, namespace: Porotutu)
-loader.collapse("#{__dir__}/lib")
-loader.collapse("#{__dir__}/lib/*")
-loader.collapse("#{__dir__}/features")
-loader.collapse("#{__dir__}/features/*/{services,handlers,validators,helpers,errors,mappers,views}")
-loader.ignore(
-  "#{__dir__}/app.rb",
-  "#{__dir__}/bin",
-  "#{__dir__}/tasks",
-  "#{__dir__}/tests",
-  "#{__dir__}/db",
-  "#{__dir__}/ksiaki",
-  "#{__dir__}/public",
-  "#{__dir__}/locales",
-  "#{__dir__}/lib/styles"
-)
-loader.setup
+require_relative 'lib/initializers/zeitwerk'
+Porotutu::Zeitwerk.setup(root: __dir__)
+Porotutu::StyleBundler.build unless Porotutu::Env.public?
 
 module Sinatra # rubocop:disable Style/OneClassPerFile
   class Base
     set :turbo_stream, 'text/vnd.turbo-stream.html'
   end
 end
-
-Porotutu::StyleBundler.build unless Porotutu::Env.public?
 
 module Porotutu # rubocop:disable Style/OneClassPerFile
   class App < Sinatra::Base

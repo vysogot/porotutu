@@ -17,6 +17,7 @@ bundle exec rake db:reset     # dev/testing only: drop schema, bootstrap, migrat
 bundle exec rake db:migrate   # apply pending db/migrations/*.sql (tracked in schema_migrations)
 bundle exec rake db:functions # reload every features/*/functions/**/*.sql
 bundle exec rake db:seed      # apply db/seeds/*.sql
+bundle exec rake styles:build # concatenate lib/styles/**/*.css into public/stylesheets/app.css
 bundle exec rubocop           # lint
 bin/console                   # IRB with full app loaded
 ```
@@ -42,7 +43,7 @@ Follow these without repeating their rationale here.
 
 ### Entry point
 
-`app.rb` boots `Porotutu::App < Sinatra::Base` via `config.ru`. It wires up Zeitwerk (with `collapse` on `lib`, `lib/*`, `features`, and each feature's `services/handlers/validators/helpers/errors/mappers` folders so their contents live at the `Porotutu::<Feature>` namespace), mounts the `CsrfProtection` and `Authentication` Rack middlewares, and `use`s each feature's modular `Routes` app (`Users::Routes`, `Conflicts::Routes`). New features plug in the same way.
+`app.rb` boots `Porotutu::App < Sinatra::Base` via `config.ru`. It wires up Zeitwerk (with `collapse` on `lib`, `lib/*`, `features`, and each feature's `services/handlers/validators/helpers/errors/mappers/views` folders so their contents live at the `Porotutu::<Feature>` namespace), mounts the `CsrfProtection` and `Authentication` Rack middlewares, and `use`s each feature's modular `Routes` app (`Users::Routes`, `Conflicts::Routes`). New features plug in the same way. At boot (non-public envs) `Porotutu::StyleBundler.build` concatenates `lib/styles/**/*.css` into `public/stylesheets/app.css`.
 
 ### Feature layout
 
@@ -65,9 +66,10 @@ Request flow: `Routes` extracts params/session → `Handler.call(...)` → `Vali
 
 ### `lib/`
 
-- `lib/infra/` — code that touches DB/ENV (`DbConnection` with ConnectionPool, `DbFunctionCall`, `Env`).
-- `lib/patterns/` — pure Ruby building blocks (`Service` with its `extend`-able `call(...) = new.call(...)`, `Validations#validate_presence/_length`, `Translations`, `PhlexView` base class with `t`/`csrf_field`/`field_error`, shared `Layout`).
-- `lib/web/` — Rack middleware (`Authentication`, `CsrfProtection`, `ReturnTo`).
+- `lib/infra/` — code that touches DB/ENV/filesystem (`DbConnection` with ConnectionPool, `DbFunctionCall`, `Env`, `StyleBundler`).
+- `lib/patterns/` — pure Ruby building blocks (`Service` with its `extend`-able `call(...) = new.call(...)`, `Validations#validate_presence/_length`, `Translations`, `PhlexView` base class with `t`/`csrf_field`/`field_error`, shared `Layout`, reusable `phlex_components`).
+- `lib/auth/` — Rack middleware (`Authentication`, `CsrfProtection`, `ReturnTo`).
+- `lib/styles/` — CSS partials concatenated into `public/stylesheets/app.css` at boot and via `rake styles:build`.
 - `lib/locales/en.yml` — i18n strings loaded by `Translations`.
 
 `Patterns::Service` is an `extend`-only module: every handler/service/validator does `extend Service` so callers use `FooService.call(...)`.
