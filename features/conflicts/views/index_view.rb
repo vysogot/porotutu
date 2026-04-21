@@ -3,6 +3,8 @@
 module Porotutu
   module Conflicts
     class IndexView < PhlexView
+      include PathsHelper
+
       def initialize(drafts:, **attrs)
         @drafts = drafts
         super(**attrs)
@@ -22,11 +24,11 @@ module Porotutu
       def page_header
         header(class: 'container') do
           hgroup do
-            h1 { t('conflicts.crud.index.heading') }
-            p { t('conflicts.crud.index.subheading') }
+            h1 { t('conflicts.index.heading') }
+            p { t('conflicts.index.subheading') }
             nav do
-              a(href: '/conflicts/new', role: 'button', class: 'outline') do
-                t('conflicts.crud.index.new_button')
+              a(href: new_conflict_path, role: 'button', class: 'outline') do
+                t('conflicts.index.new_button')
               end
             end
           end
@@ -34,12 +36,12 @@ module Porotutu
       end
 
       def empty_state
-        article { p { t('conflicts.crud.index.empty') } }
+        article { p { t('conflicts.index.empty') } }
       end
 
       def drafts_section
         section(id: 'conflicts-drafts-section') do
-          h2 { t('conflicts.crud.index.drafts_heading') }
+          h2 { t('conflicts.index.drafts_heading') }
           div(id: 'conflicts-drafts') do
             @drafts.each { |conflict| render CardView.new(conflict:, csrf_token: @csrf_token) }
           end

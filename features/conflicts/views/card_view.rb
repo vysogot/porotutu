@@ -3,13 +3,16 @@
 module Porotutu
   module Conflicts
     class CardView < PhlexView
+      include PathsHelper
+      include DomIdsHelper
+
       def initialize(conflict:, **attrs)
         @conflict = conflict
         super(**attrs)
       end
 
       def view_template
-        tag(:'turbo-frame', id: "conflict-#{@conflict.id}") do
+        tag(:'turbo-frame', id: conflict_frame_id(@conflict)) do
           article do
             card_header
             p { @conflict.description } if @conflict.description && !@conflict.description.empty?
@@ -22,16 +25,16 @@ module Porotutu
 
       def card_header
         header do
-          h3 { a(href: "/conflicts/#{@conflict.id}", data: { 'turbo-frame': '_top' }) { @conflict.title } }
-          small { t('conflicts.crud.card.favor_label', favor: @conflict.favor) } if @conflict.favor
+          h3 { a(href: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) { @conflict.title } }
+          small { t('conflicts.card.favor_label', favor: @conflict.favor) } if @conflict.favor
         end
       end
 
       def draft_actions
         footer do
           div(class: 'grid') do
-            a(href: "/conflicts/#{@conflict.id}/edit", role: 'button', class: 'outline') do
-              t('conflicts.crud.card.edit_button')
+            a(href: edit_conflict_path(@conflict), role: 'button', class: 'outline') do
+              t('conflicts.card.edit_button')
             end
             delete_form
           end
@@ -39,9 +42,9 @@ module Porotutu
       end
 
       def delete_form
-        form(method: 'delete', action: "/conflicts/#{@conflict.id}", data: { 'turbo-frame': '_top' }) do
+        form(method: 'delete', action: conflict_path(@conflict), data: { 'turbo-frame': '_top' }) do
           csrf_field
-          button(type: 'submit', class: 'secondary outline') { t('conflicts.crud.card.delete_button') }
+          button(type: 'submit', class: 'secondary outline') { t('conflicts.card.delete_button') }
         end
       end
     end

@@ -4,48 +4,45 @@ layouts:
     nav_conflicts: "Conflicts"
     logout_button: "Logout"
 conflicts:
-  crud:
-    index:
-      heading: "Couple of Conflicts"
-      subheading: "Track and resolve conflicts together."
-      new_button: "+ New conflict"
-      empty: "No conflicts yet. Start one to get the conversation going."
-      drafts_heading: "Your drafts"
-    card:
-      favor_label: "Favor: {{favor}}"
-      edit_button: "Edit"
-      delete_button: "Delete"
-    new:
-      title: "New conflict"
-      title_label: "What's it about?"
-      title_placeholder: "e.g. Who does the dishes"
-      description_label: "Describe the conflict"
-      description_placeholder: "Give some context..."
-      favor_label: "What's the favor that would settle this?"
-      favor_placeholder: "e.g. The other person cooks for a week"
-      submit_button: "Create conflict"
-      cancel_button: "Cancel"
-    edit:
-      title: "Edit conflict"
-      title_label: "What's it about?"
-      description_label: "Describe the conflict"
-      favor_label: "What's the favor?"
-      submit_button: "Save"
-      cancel_button: "Cancel"
-    show:
-      back: "← Back to conflicts"
+  index:
+    heading: "Couple of Conflicts"
+    subheading: "Track and resolve conflicts together."
+    new_button: "+ New conflict"
+    empty: "No conflicts yet. Start one to get the conversation going."
+    drafts_heading: "Your drafts"
+  card:
+    favor_label: "Favor: {{favor}}"
+    edit_button: "Edit"
+    delete_button: "Delete"
+  new:
+    title: "New conflict"
+    title_label: "What's it about?"
+    title_placeholder: "e.g. Who does the dishes"
+    description_label: "Describe the conflict"
+    description_placeholder: "Give some context..."
+    favor_label: "What's the favor that would settle this?"
+    favor_placeholder: "e.g. The other person cooks for a week"
+    submit_button: "Create conflict"
+    cancel_button: "Cancel"
+  edit:
+    title: "Edit conflict"
+    title_label: "What's it about?"
+    description_label: "Describe the conflict"
+    favor_label: "What's the favor?"
+    submit_button: "Save"
+    cancel_button: "Cancel"
+  show:
+    back: "← Back to conflicts"
 users:
-  auth:
-    new:
-      heading: "Login"
-      email_label: "Email"
-      password_label: "Password"
-      submit_button: "Login"
-      register_link: "Create an account"
-  crud:
-    new:
-      heading: "Register"
-      email_label: "Email"
-      password_label: "Password"
-      submit_button: "Register"
-      login_link: "Already have an account?"
+  login:
+    heading: "Login"
+    email_label: "Email"
+    password_label: "Password"
+    submit_button: "Login"
+    register_link: "Create an account"
+  register:
+    heading: "Register"
+    email_label: "Email"
+    password_label: "Password"
+    submit_button: "Register"
+    login_link: "Already have an account?"

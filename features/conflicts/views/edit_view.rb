@@ -3,6 +3,9 @@
 module Porotutu
   module Conflicts
     class EditView < PhlexView
+      include PathsHelper
+      include DomIdsHelper
+
       def initialize(conflict:, params: {}, errors: nil, layout: true, **attrs)
         @conflict = conflict
         @params = params
@@ -24,12 +27,12 @@ module Porotutu
       private
 
       def frame
-        tag(:'turbo-frame', id: "conflict-#{@conflict.id}") { edit_article }
+        tag(:'turbo-frame', id: conflict_frame_id(@conflict)) { edit_article }
       end
 
       def edit_article
         article do
-          header { h3 { t('conflicts.crud.edit.title') } }
+          header { h3 { t('conflicts.edit.title') } }
           render form_component
         end
       end
@@ -37,10 +40,10 @@ module Porotutu
       def form_component
         FormView.new(
           csrf_token: @csrf_token,
-          action: "/conflicts/#{@conflict.id}",
+          action: conflict_path(@conflict),
           method: 'patch',
           t_scope: 'edit',
-          cancel_href: "/conflicts/#{@conflict.id}",
+          cancel_href: conflict_path(@conflict),
           values: {
             title: @params[:title] || @conflict.title,
             description: @params[:description] || @conflict.description,

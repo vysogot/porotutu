@@ -38,7 +38,7 @@ module Porotutu
       def form_method = method_override? ? 'post' : @method
       def method_override? = @method == 'patch'
 
-      def ts(key) = t("conflicts.crud.#{@t_scope}.#{key}")
+      def ts(key) = t("conflicts.#{@t_scope}.#{key}")
 
       def text_field(name, max:, autofocus: false)
         label(for: name) do
@@ -75,7 +75,7 @@ module Porotutu
       end
 
       def placeholder_for(name)
-        value = Translations.t("conflicts.crud.#{@t_scope}.#{name}_placeholder")
+        value = Translations.t("conflicts.#{@t_scope}.#{name}_placeholder")
         value.start_with?('TRANSLATE!!') ? nil : value
       end
     end

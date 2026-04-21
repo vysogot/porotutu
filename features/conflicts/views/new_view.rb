@@ -3,6 +3,8 @@
 module Porotutu
   module Conflicts
     class NewView < PhlexView
+      include PathsHelper
+
       def initialize(params: {}, errors: nil, **attrs)
         @params = params
         @errors = errors
@@ -12,15 +14,15 @@ module Porotutu
       def view_template
         render Porotutu::Layout.new(csrf_token: @csrf_token) do
           main(class: 'container', id: 'new_conflict_frame') do
-            h2 { t('conflicts.crud.new.title') }
+            h2 { t('conflicts.new.title') }
             render FormView.new(
               csrf_token: @csrf_token,
-              action: '/conflicts',
+              action: conflicts_path,
               method: 'post',
               t_scope: 'new',
               values: { title: @params[:title], description: @params[:description], favor: @params[:favor] },
               errors: @errors,
-              cancel_href: '/conflicts'
+              cancel_href: conflicts_path
             )
           end
         end
