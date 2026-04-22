@@ -7,12 +7,11 @@ module Porotutu
     class IndexHandlerTest < Tests::TestCase
       def setup
         super
-        @user = UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create
       end
 
       def test_returns_drafts_for_user
         draft = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id'],
           status: 'draft'
         )

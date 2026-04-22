@@ -7,13 +7,12 @@ module Porotutu
     class RoutesTest < Tests::RequestTestCase
       def setup
         super
-        @user = UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create
         login_as(@user)
       end
 
       def test_get_index_renders_with_drafts
         ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id'],
           status: 'draft',
           title: 'My draft'
@@ -51,7 +50,6 @@ module Porotutu
 
       def test_get_show_for_owned_conflict
         conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id'],
           title: 'Showable'
         )
@@ -64,7 +62,6 @@ module Porotutu
 
       def test_get_edit_for_owned_conflict
         conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id']
         )
 
@@ -76,7 +73,6 @@ module Porotutu
 
       def test_patch_updates_owned_conflict
         conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id'],
           title: 'Old'
         )
@@ -93,7 +89,6 @@ module Porotutu
 
       def test_patch_returns_422_when_invalid
         conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id']
         )
 
@@ -104,7 +99,6 @@ module Porotutu
 
       def test_delete_removes_owned_conflict_and_redirects
         conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id']
         )
 

@@ -7,7 +7,7 @@ module Porotutu
     class CreateHandlerTest < Tests::TestCase
       def setup
         super
-        @user = UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create
       end
 
       def test_validates_creates_and_returns_locals_with_draft_status

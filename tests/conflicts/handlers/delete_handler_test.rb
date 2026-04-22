@@ -7,9 +7,8 @@ module Porotutu
     class DeleteHandlerTest < Tests::TestCase
       def setup
         super
-        @user = UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create
         @conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id']
         )
       end
@@ -26,7 +25,7 @@ module Porotutu
       end
 
       def test_does_not_delete_conflict_owned_by_other_user
-        other = UserFactory.create(conn: @_db_conn)
+        other = UserFactory.create
 
         DeleteHandler.call(
           params: { id: @conflict['id'] },

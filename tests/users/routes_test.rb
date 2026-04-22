@@ -35,7 +35,7 @@ module Porotutu
       def test_post_session_with_valid_credentials_logs_in_and_redirects
         email = "routes-login-#{SecureRandom.hex(4)}@example.com"
         password = 'hunter22'
-        UserFactory.create(conn: @_db_conn, email: email, password: password)
+        UserFactory.create(email: email, password: password)
 
         post '/session', email: email, password: password
 
@@ -46,7 +46,7 @@ module Porotutu
 
       def test_post_session_with_bad_password_rerenders_login_without_session
         email = "routes-bad-#{SecureRandom.hex(4)}@example.com"
-        UserFactory.create(conn: @_db_conn, email: email, password: 'hunter22')
+        UserFactory.create(email: email, password: 'hunter22')
 
         post '/session', email: email, password: 'wrong'
 
@@ -63,7 +63,7 @@ module Porotutu
       end
 
       def test_post_logout_clears_session_and_redirects_to_login
-        row = UserFactory.create(conn: @_db_conn)
+        row = UserFactory.create
         env 'rack.session', { 'user_id' => row['id'] }
 
         post '/logout'

@@ -18,14 +18,23 @@ Dir["#{__dir__}/support/**/*.rb"].each { |file| require file }
 
 module Porotutu
   module Tests
+    module PinnedConnection
+      def with(&block)
+        pinned = Thread.current[:porotutu_pinned_conn]
+        return super unless pinned
+
+        block.call(pinned)
+      end
+    end
+
     class TestCase < Minitest::Test
       include Porotutu::Tests
+
+      parallelize_me!
 
       def setup
         @_db_conn = DbConnection.pool.checkout
         @_db_conn.exec('BEGIN')
-        @_pinned_conn = @_db_conn
-        DbConnection.singleton_class.prepend(PinnedConnection)
         Thread.current[:porotutu_pinned_conn] = @_db_conn
       end
 
@@ -43,14 +52,7 @@ module Porotutu
         Porotutu::App
       end
     end
-
-    module PinnedConnection
-      def with(&block)
-        pinned = Thread.current[:porotutu_pinned_conn]
-        return super unless pinned
-
-        block.call(pinned)
-      end
-    end
   end
 end
+
+Porotutu::DbConnection.singleton_class.prepend(Porotutu::Tests::PinnedConnection)

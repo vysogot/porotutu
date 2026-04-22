@@ -10,7 +10,6 @@ module Porotutu
         @email = "login-handler-#{SecureRandom.hex(4)}@example.com"
         @password = 'hunter22'
         UserFactory.create(
-          conn: @_db_conn,
           email: @email,
           password: @password
         )

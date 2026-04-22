@@ -7,9 +7,8 @@ module Porotutu
     class ShowHandlerTest < Tests::TestCase
       def setup
         super
-        @user = UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create
         @conflict = ConflictFactory.create(
-          conn: @_db_conn,
           creator_id: @user['id']
         )
       end
@@ -24,7 +23,7 @@ module Porotutu
       end
 
       def test_returns_nil_conflict_when_not_owned
-        other = UserFactory.create(conn: @_db_conn)
+        other = UserFactory.create
 
         locals = ShowHandler.call(
           params: { id: @conflict['id'] },
