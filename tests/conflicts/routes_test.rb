@@ -7,12 +7,12 @@ module Porotutu
     class RoutesTest < Tests::RequestTestCase
       def setup
         super
-        @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create(conn: @_db_conn)
         login_as(@user)
       end
 
       def test_get_index_renders_with_drafts
-        Tests::Factories::ConflictFactory.create(
+        ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id'],
           status: 'draft',
@@ -38,7 +38,8 @@ module Porotutu
         assert_equal 303, last_response.status
         assert_match %r{^/conflicts/[\w-]+$}, URI(last_response.location).path
 
-        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE creator_id = $1', [@user['id']])
+        row = TestDb.fetch_one('SELECT id FROM conflicts WHERE creator_id = $1', [@user['id']])
+
         refute_nil row
       end
 
@@ -49,7 +50,7 @@ module Porotutu
       end
 
       def test_get_show_for_owned_conflict
-        conflict = Tests::Factories::ConflictFactory.create(
+        conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id'],
           title: 'Showable'
@@ -62,7 +63,7 @@ module Porotutu
       end
 
       def test_get_edit_for_owned_conflict
-        conflict = Tests::Factories::ConflictFactory.create(
+        conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id']
         )
@@ -74,7 +75,7 @@ module Porotutu
       end
 
       def test_patch_updates_owned_conflict
-        conflict = Tests::Factories::ConflictFactory.create(
+        conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id'],
           title: 'Old'
@@ -85,12 +86,13 @@ module Porotutu
         assert_equal 200, last_response.status
         assert_includes last_response.content_type, 'text/vnd.turbo-stream.html'
 
-        row = Tests::TestDb.fetch_one('SELECT title FROM conflicts WHERE id = $1', [conflict['id']])
+        row = TestDb.fetch_one('SELECT title FROM conflicts WHERE id = $1', [conflict['id']])
+
         assert_equal 'New', row['title']
       end
 
       def test_patch_returns_422_when_invalid
-        conflict = Tests::Factories::ConflictFactory.create(
+        conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id']
         )
@@ -101,7 +103,7 @@ module Porotutu
       end
 
       def test_delete_removes_owned_conflict_and_redirects
-        conflict = Tests::Factories::ConflictFactory.create(
+        conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id']
         )
@@ -111,7 +113,8 @@ module Porotutu
         assert_equal 303, last_response.status
         assert_equal '/conflicts', URI(last_response.location).path
 
-        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [conflict['id']])
+        row = TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [conflict['id']])
+
         assert_nil row
       end
 

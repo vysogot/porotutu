@@ -31,7 +31,8 @@ module Porotutu
 
       def login_form
         protected_form(action: session_path, method: 'post', data: { turbo: 'false' }, class: 'form') do
-          labeled_input(:email, label_text: t('users.login.email_label'), type: 'email', required: true, autofocus: true)
+          labeled_input(:email, label_text: t('users.login.email_label'), type: 'email', required: true,
+                                autofocus: true)
           labeled_input(:password, label_text: t('users.login.password_label'), type: 'password', required: true)
           button(type: 'submit', class: 'btn btn--primary') { t('users.login.submit_button') }
         end

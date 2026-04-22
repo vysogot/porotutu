@@ -1,6 +1,6 @@
 ---
 name: testing
-description: Use when writing or editing files under `tests/` — Minitest test files ending in `_test.rb`. Covers inheriting `Porotutu::Tests::TestCase` (DB-transaction rollback), `Tests::RequestTestCase` (Rack::Test + same-connection pinning), factories under `tests/support/factories/` that INSERT directly (not through feature services), folder structure mirroring `features/<name>/`, the no-mocks policy, and unique values (`SecureRandom.hex`) for unique columns. Trigger on "write a test", "add a test", `test_`, `_test.rb`, or anything involving the test runner.
+description: Use when writing or editing files under `tests/` — Minitest test files ending in `_test.rb`. Covers inheriting `Porotutu::Tests::TestCase` (DB-transaction rollback), `Tests::RequestTestCase` (Rack::Test + same-connection pinning), factories and `TestDb` under `tests/support/` that are visible as bare constants via `include Porotutu::Tests`, INSERT directly (not through feature services), folder structure mirroring `features/<name>/`, the no-mocks policy, and unique values (`SecureRandom.hex`) for unique columns. Trigger on "write a test", "add a test", `test_`, `_test.rb`, or anything involving the test runner.
 ---
 
 # Tests
@@ -15,9 +15,9 @@ For each `features/<name>/<layer>/<file>.rb` there's a `tests/<name>/<layer>/<fi
 tests/
   test_helper.rb
   support/
-    factories/
-      user_factory.rb
-      conflict_factory.rb
+    user_factory.rb      # Porotutu::Tests::UserFactory
+    conflict_factory.rb  # Porotutu::Tests::ConflictFactory
+    test_db.rb           # Porotutu::Tests::TestDb
   users/
     routes_test.rb
     services/, handlers/, helpers/, mappers/
@@ -25,6 +25,8 @@ tests/
     routes_test.rb
     services/, handlers/, validators/, helpers/, mappers/
 ```
+
+Everything under `tests/support/` is defined directly in the `Porotutu::Tests` namespace — no `Factories::` sub-module. `Tests::TestCase` does `include Porotutu::Tests`, so inside a test class `UserFactory`, `ConflictFactory`, and `TestDb` all resolve as bare constants.
 
 Not currently tested as units: views (rendered via request specs instead), SQL functions (covered via services), per-feature error classes (trivial data).
 
@@ -66,11 +68,11 @@ If a test needs seeded data, override `setup` and call `super` first, then use a
 
 ## Use factories, not feature services, for test setup
 
-Factories live in `tests/support/factories/` and `INSERT` directly into tables using the test's checked-out `@_db_conn`. They do NOT go through feature plpgsql functions or services. That isolates tests from feature code: a broken `CreateService` won't cascade into every login test.
+Factories live in `tests/support/` under `Porotutu::Tests` (e.g. `Porotutu::Tests::UserFactory`) and `INSERT` directly into tables using the test's checked-out `@_db_conn`. They do NOT go through feature plpgsql functions or services. That isolates tests from feature code: a broken `CreateService` won't cascade into every login test.
 
 ```ruby
 # GOOD — factory writes directly to the `users` table
-@user = Tests::Factories::UserFactory.create(conn: @_db_conn)
+@user = UserFactory.create(conn: @_db_conn)
 # row hash, e.g. @user['id'], @user['email']
 
 # BAD — couples the login test to CreateService
@@ -79,7 +81,7 @@ Users::CreateService.call(params: { email: ..., password: ... })
 
 Factories return **raw row hashes** (`PG::Result` rows), not mappers. Mappers are feature code; factories are deliberately feature-free. If a test wants a mapper it can pass the row through one itself.
 
-When adding a new table, add a matching factory module under `tests/support/factories/` (naming: `<thing>_factory.rb` → `Tests::Factories::<Thing>Factory.create(conn:, **fields)`). Generate unique defaults (`SecureRandom.hex`) for uniquely-constrained columns.
+When adding a new table, add a matching factory module under `tests/support/` directly in the `Porotutu::Tests` namespace (naming: `<thing>_factory.rb` → `Porotutu::Tests::<Thing>Factory.create(conn:, **fields)`). Generate unique defaults (`SecureRandom.hex`) for uniquely-constrained columns.
 
 ## Request/route tests: `Tests::RequestTestCase`
 
@@ -89,7 +91,7 @@ Route tests inherit `Tests::RequestTestCase`, which adds `Rack::Test::Methods` a
 class RoutesTest < Tests::RequestTestCase
   def setup
     super
-    @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
+    @user = UserFactory.create(conn: @_db_conn)
     env 'rack.session', { 'user_id' => @user['id'] }
   end
 
@@ -104,9 +106,24 @@ CSRF is disabled in test (`CsrfProtection` skips when `APP_ENV == 'test'`), so m
 
 Sinatra appends `;charset=utf-8` to some content types — match with `assert_includes`, not `assert_equal`.
 
+## Use `TestDb.fetch_one` for DB-state assertions
+
+When a test needs to verify DB state directly (not via a service), use `TestDb.fetch_one(sql, params)`. It reads from the pinned test connection, so you don't pass `@_db_conn`:
+
+```ruby
+# GOOD
+row = TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [conflict['id']])
+assert_nil row
+
+# BAD — verbose, duplicates the pinned-connection plumbing at every call site
+row = @_db_conn.exec_params('SELECT id FROM conflicts WHERE id = $1', [conflict['id']]).first
+```
+
+`TestDb` is the only intended single-row helper; if you need multi-row fetches or write-path work in a test, add a sibling method (`fetch_all`, etc.) rather than reaching for `@_db_conn` directly.
+
 ## Don't open your own DB connections
 
-Don't `PG.connect(...)` inside a test. Don't call `DbConnection.pool.with` or `.checkout` for fixture setup — the pinning only redirects `DbConnection.with`, but you'd be bypassing pinning entirely and double-checking-out from the pool. Use the factory (which takes `conn: @_db_conn`) or write `@_db_conn.exec_params(...)` directly for one-off assertions.
+Don't `PG.connect(...)` inside a test. Don't call `DbConnection.pool.with` or `.checkout` for fixture setup — the pinning only redirects `DbConnection.with`, but you'd be bypassing pinning entirely and double-checking-out from the pool. Use the factory (which takes `conn: @_db_conn`) for inserts and `TestDb.fetch_one(...)` for reads.
 
 ## Don't clean up manually
 

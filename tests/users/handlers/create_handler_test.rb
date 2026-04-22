@@ -13,7 +13,8 @@ module Porotutu
         )
 
         assert_equal({}, locals)
-        row = Tests::TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
+        row = TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
+
         refute_nil row
       end
 
@@ -24,7 +25,8 @@ module Porotutu
           params: { email: email, password: 'hunter22', admin: true, id: 'spoofed' }
         )
 
-        row = Tests::TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
+        row = TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
+
         refute_nil row
         refute_equal 'spoofed', row['id']
       end

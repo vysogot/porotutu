@@ -7,16 +7,16 @@ module Porotutu
     class FindManyServiceTest < Tests::TestCase
       def setup
         super
-        @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create(conn: @_db_conn)
       end
 
       def test_groups_drafts_for_the_given_user
-        draft = Tests::Factories::ConflictFactory.create(
+        draft = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id'],
           status: 'draft'
         )
-        Tests::Factories::ConflictFactory.create(
+        ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id'],
           status: 'resolved'
@@ -28,8 +28,8 @@ module Porotutu
       end
 
       def test_does_not_return_other_users_conflicts
-        other = Tests::Factories::UserFactory.create(conn: @_db_conn)
-        Tests::Factories::ConflictFactory.create(
+        other = UserFactory.create(conn: @_db_conn)
+        ConflictFactory.create(
           conn: @_db_conn,
           creator_id: other['id'],
           status: 'draft'

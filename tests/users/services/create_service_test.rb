@@ -22,7 +22,7 @@ module Porotutu
 
         CreateService.call(params: { email: email, password: password })
 
-        row = Tests::TestDb.fetch_one('SELECT password_digest FROM users WHERE email = $1', [email])
+        row = TestDb.fetch_one('SELECT password_digest FROM users WHERE email = $1', [email])
         digest = BCrypt::Password.new(row['password_digest'])
 
         assert_equal digest, password

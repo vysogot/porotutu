@@ -7,8 +7,8 @@ module Porotutu
     class FindOneServiceTest < Tests::TestCase
       def setup
         super
-        @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
-        @conflict = Tests::Factories::ConflictFactory.create(
+        @user = UserFactory.create(conn: @_db_conn)
+        @conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id']
         )
@@ -22,7 +22,7 @@ module Porotutu
       end
 
       def test_returns_nil_when_not_owned_by_caller
-        other = Tests::Factories::UserFactory.create(conn: @_db_conn)
+        other = UserFactory.create(conn: @_db_conn)
 
         assert_nil FindOneService.call(id: @conflict['id'], user_id: other['id'])
       end

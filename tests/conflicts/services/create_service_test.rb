@@ -7,7 +7,7 @@ module Porotutu
     class CreateServiceTest < Tests::TestCase
       def setup
         super
-        @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
+        @user = UserFactory.create(conn: @_db_conn)
       end
 
       def test_creates_a_conflict_and_returns_a_mapper

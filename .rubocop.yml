@@ -10,6 +10,8 @@ Style/Documentation:
 
 Minitest/MultipleAssertions:
   Max: 5
+  Exclude:
+    - 'tests/**/*.rb'
 
 Metrics/BlockLength:
   Exclude:
@@ -17,20 +19,25 @@ Metrics/BlockLength:
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/layout.rb'
     - 'lib/patterns/phlex_components/**/*.rb'
+    - 'tests/**/*.rb'
 
 Metrics/MethodLength:
   Exclude:
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/layout.rb'
     - 'lib/patterns/phlex_components/**/*.rb'
+    - 'lib/initializers/zeitwerk.rb'
+    - 'tests/**/*.rb'
 
 Metrics/AbcSize:
   Exclude:
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/layout.rb'
     - 'lib/patterns/phlex_components/**/*.rb'
+    - 'tests/**/*.rb'
 
 Metrics/ParameterLists:
   Exclude:
     - 'features/**/views/**/*.rb'
     - 'lib/patterns/phlex_components/**/*.rb'
+    - 'tests/support/**/*.rb'

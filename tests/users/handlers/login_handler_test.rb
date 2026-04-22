@@ -9,7 +9,7 @@ module Porotutu
         super
         @email = "login-handler-#{SecureRandom.hex(4)}@example.com"
         @password = 'hunter22'
-        Tests::Factories::UserFactory.create(
+        UserFactory.create(
           conn: @_db_conn,
           email: @email,
           password: @password

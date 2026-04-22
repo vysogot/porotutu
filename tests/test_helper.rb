@@ -16,9 +16,11 @@ require_relative "#{root}/app"
 
 Dir["#{__dir__}/support/**/*.rb"].each { |file| require file }
 
-module Porotutu # rubocop:disable Style/OneClassPerFile
+module Porotutu
   module Tests
     class TestCase < Minitest::Test
+      include Porotutu::Tests
+
       def setup
         @_db_conn = DbConnection.pool.checkout
         @_db_conn.exec('BEGIN')

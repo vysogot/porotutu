@@ -7,8 +7,8 @@ module Porotutu
     class DeleteServiceTest < Tests::TestCase
       def setup
         super
-        @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
-        @conflict = Tests::Factories::ConflictFactory.create(
+        @user = UserFactory.create(conn: @_db_conn)
+        @conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id']
         )
@@ -20,16 +20,18 @@ module Porotutu
         assert_kind_of ConflictMapper, deleted
         assert_equal @conflict['id'], deleted.id
 
-        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
+        row = TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
+
         assert_nil row
       end
 
       def test_returns_nil_and_does_not_delete_when_caller_is_not_creator
-        other = Tests::Factories::UserFactory.create(conn: @_db_conn)
+        other = UserFactory.create(conn: @_db_conn)
 
         assert_nil DeleteService.call(id: @conflict['id'], user_id: other['id'])
 
-        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
+        row = TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
+
         refute_nil row
       end
     end

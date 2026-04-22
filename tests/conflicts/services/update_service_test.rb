@@ -7,8 +7,8 @@ module Porotutu
     class UpdateServiceTest < Tests::TestCase
       def setup
         super
-        @user = Tests::Factories::UserFactory.create(conn: @_db_conn)
-        @conflict = Tests::Factories::ConflictFactory.create(
+        @user = UserFactory.create(conn: @_db_conn)
+        @conflict = ConflictFactory.create(
           conn: @_db_conn,
           creator_id: @user['id'],
           title: 'Old',

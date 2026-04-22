@@ -27,14 +27,15 @@ module Porotutu
         assert_equal 302, last_response.status
         assert_equal '/login', URI(last_response.location).path
 
-        row = Tests::TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
+        row = TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
+
         refute_nil row
       end
 
       def test_post_session_with_valid_credentials_logs_in_and_redirects
         email = "routes-login-#{SecureRandom.hex(4)}@example.com"
         password = 'hunter22'
-        Tests::Factories::UserFactory.create(conn: @_db_conn, email: email, password: password)
+        UserFactory.create(conn: @_db_conn, email: email, password: password)
 
         post '/session', email: email, password: password
 
@@ -45,7 +46,7 @@ module Porotutu
 
       def test_post_session_with_bad_password_rerenders_login_without_session
         email = "routes-bad-#{SecureRandom.hex(4)}@example.com"
-        Tests::Factories::UserFactory.create(conn: @_db_conn, email: email, password: 'hunter22')
+        UserFactory.create(conn: @_db_conn, email: email, password: 'hunter22')
 
         post '/session', email: email, password: 'wrong'
 
@@ -62,7 +63,7 @@ module Porotutu
       end
 
       def test_post_logout_clears_session_and_redirects_to_login
-        row = Tests::Factories::UserFactory.create(conn: @_db_conn)
+        row = UserFactory.create(conn: @_db_conn)
         env 'rack.session', { 'user_id' => row['id'] }
 
         post '/logout'
