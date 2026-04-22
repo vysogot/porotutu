@@ -20,10 +20,7 @@ module Porotutu
           current_user_id: @user['id']
         )
 
-        row = @_db_conn.exec_params(
-          'SELECT id FROM conflicts WHERE id = $1',
-          [@conflict['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
         assert_nil row
       end
 
@@ -35,10 +32,7 @@ module Porotutu
           current_user_id: other['id']
         )
 
-        row = @_db_conn.exec_params(
-          'SELECT id FROM conflicts WHERE id = $1',
-          [@conflict['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
         refute_nil row
       end
     end

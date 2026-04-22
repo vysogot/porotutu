@@ -27,7 +27,7 @@ module Porotutu
         assert_equal 302, last_response.status
         assert_equal '/login', URI(last_response.location).path
 
-        row = @_db_conn.exec_params('SELECT id FROM users WHERE email = $1', [email]).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM users WHERE email = $1', [email])
         refute_nil row
       end
 

@@ -20,10 +20,7 @@ module Porotutu
         assert_kind_of ConflictMapper, deleted
         assert_equal @conflict['id'], deleted.id
 
-        row = @_db_conn.exec_params(
-          'SELECT id FROM conflicts WHERE id = $1',
-          [@conflict['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
         assert_nil row
       end
 
@@ -32,10 +29,7 @@ module Porotutu
 
         assert_nil DeleteService.call(id: @conflict['id'], user_id: other['id'])
 
-        row = @_db_conn.exec_params(
-          'SELECT id FROM conflicts WHERE id = $1',
-          [@conflict['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [@conflict['id']])
         refute_nil row
       end
     end

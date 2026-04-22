@@ -38,10 +38,7 @@ module Porotutu
         assert_equal 303, last_response.status
         assert_match %r{^/conflicts/[\w-]+$}, URI(last_response.location).path
 
-        row = @_db_conn.exec_params(
-          'SELECT id FROM conflicts WHERE creator_id = $1',
-          [@user['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE creator_id = $1', [@user['id']])
         refute_nil row
       end
 
@@ -88,10 +85,7 @@ module Porotutu
         assert_equal 200, last_response.status
         assert_includes last_response.content_type, 'text/vnd.turbo-stream.html'
 
-        row = @_db_conn.exec_params(
-          'SELECT title FROM conflicts WHERE id = $1',
-          [conflict['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT title FROM conflicts WHERE id = $1', [conflict['id']])
         assert_equal 'New', row['title']
       end
 
@@ -117,10 +111,7 @@ module Porotutu
         assert_equal 303, last_response.status
         assert_equal '/conflicts', URI(last_response.location).path
 
-        row = @_db_conn.exec_params(
-          'SELECT id FROM conflicts WHERE id = $1',
-          [conflict['id']]
-        ).first
+        row = Tests::TestDb.fetch_one('SELECT id FROM conflicts WHERE id = $1', [conflict['id']])
         assert_nil row
       end
 
